@@ -1,0 +1,300 @@
+name: "Morning Routine Assistant"
+description: "综合早晨助手工作流，包含通勤、天气、日程检查"
+version: "1.0.0"
+
+variables:
+  home_location: "116.481485,39.990464"
+  work_location: "116.481485,39.990464"
+  office_city: "北京"
+  buffer_time: 30
+  check_days: 3
+
+start_node: "start_check"
+
+end_nodes:
+  - "morning_summary"
+
+nodes:
+  - id: "start_check"
+    type: "start"
+    name: "开始早晨检查"
+    description: "启动每日早晨例行检查流程"
+    next_nodes: ["check_calendar", "get_weather"]
+
+  - id: "check_calendar"
+    type: "mcp_tool"
+    name: "检查今日日程"
+    description: "检查今天的日程安排和重要事件"
+    config:
+      server: "calendar-mcp-server"
+      tool: "get_events"
+    inputs:
+      start_date: "${variables.today}"
+      end_date: "${variables.today}"
+    outputs: ["todays_events"]
+    next_nodes: ["analyze_schedule"]
+
+  - id: "get_weather"
+    type: "mcp_tool"
+    name: "获取天气信息"
+    description: "获取当前天气和未来几天预报"
+    config:
+      server: "weather-mcp-server"
+      tool: "get_current_weather"
+    inputs:
+      city: "${variables.office_city}"
+    outputs: ["current_weather"]
+    next_nodes: ["get_forecast"]
+
+  - id: "get_forecast"
+    type: "mcp_tool"
+    name: "获取天气预报"
+    description: "获取未来几天的天气预报"
+    config:
+      server: "weather-mcp-server"
+      tool: "get_weather_forecast"
+    inputs:
+      city: "${variables.office_city}"
+      days: "${variables.check_days}"
+    outputs: ["weather_forecast"]
+    next_nodes: ["analyze_weather"]
+
+  - id: "calculate_route"
+    type: "mcp_tool"
+    name: "计算通勤路线"
+    description: "计算从家到办公室的最佳路线"
+    config:
+      server: "amap-mcp-server"
+      tool: "calculate_route"
+    inputs:
+      origin: "${variables.home_location}"
+      destination: "${variables.work_location}"
+    outputs: ["route_info"]
+    next_nodes: ["get_traffic"]
+
+  - id: "get_traffic"
+    type: "mcp_tool"
+    name: "获取路况信息"
+    description: "获取实时路况和拥堵情况"
+    config:
+      server: "amap-mcp-server"
+      tool: "get_traffic_condition"
+    inputs:
+      origin: "${variables.home_location}"
+      destination: "${variables.work_location}"
+    outputs: ["traffic_info"]
+    next_nodes: ["analyze_commute"]
+
+  - id: "analyze_schedule"
+    type: "condition"
+    name: "分析日程重要性"
+    description: "分析今日日程的重要性和紧急程度"
+    condition:
+      left: "${check_calendar.todays_events.total_count}"
+      operator: ">"
+      right: 0
+    outputs: ["schedule_analysis"]
+    next_nodes: ["assess_priority"]
+
+  - id: "analyze_weather"
+    type: "transform"
+    name: "分析天气影响"
+    description: "分析天气对出行的影响程度"
+    config:
+      script: |
+        # 分析天气数据对出行的影响
+        weather_impact = "low"
+        if current_weather.temperature < 0 or current_weather.temperature > 35:
+            weather_impact = "high"
+        elif "雨" in current_weather.weather_condition:
+            weather_impact = "medium"
+        
+        # 分析预报趋势
+        forecast_trend = "stable"
+        if len(weather_forecast.forecasts) > 1:
+            temps = [f.high_temperature for f in weather_forecast.forecasts]
+            if max(temps) - min(temps) > 10:
+                forecast_trend = "volatile"
+        
+        result = {
+            "impact_level": weather_impact,
+            "forecast_trend": forecast_trend,
+            "recommendation": "normal"
+        }
+    inputs:
+      current_weather: "${get_weather.current_weather}"
+      weather_forecast: "${get_forecast.weather_forecast}"
+    outputs: ["weather_analysis"]
+    next_nodes: ["assess_conditions"]
+
+  - id: "analyze_commute"
+    type: "transform"
+    name: "分析通勤情况"
+    description: "综合分析通勤时间和路况"
+    config:
+      script: |
+        # 分析通勤数据
+        duration_minutes = route_info.duration // 60
+        traffic_status = traffic_info.congestion_level
+        
+        # 计算建议出发时间
+        buffer_minutes = variables.buffer_time
+        suggested_departure = current_time + timedelta(minutes=duration_minutes + buffer_minutes)
+        
+        # 评估通勤难度
+        commute_difficulty = "easy"
+        if duration_minutes > 60:
+            commute_difficulty = "hard"
+        elif "拥堵" in traffic_status:
+            commute_difficulty = "moderate"
+        
+        result = {
+            "duration_minutes": duration_minutes,
+            "traffic_status": traffic_status,
+            "suggested_departure": suggested_departure.isoformat(),
+            "difficulty": commute_difficulty
+        }
+    inputs:
+      route_info: "${calculate_route.route_info}"
+      traffic_info: "${get_traffic.traffic_info}"
+      current_time: "${variables.now}"
+    outputs: ["commute_analysis"]
+    next_nodes: ["prepare_recommendations"]
+
+  - id: "assess_priority"
+    type: "condition"
+    name: "评估事项优先级"
+    description: "根据日程重要性评估今日优先级"
+    condition:
+      left: "${analyze_schedule.schedule_analysis.important_events}"
+      operator: ">"
+      right: 0
+    outputs: ["priority_assessment"]
+    next_nodes: ["adjust_timing"]
+
+  - id: "assess_conditions"
+    type: "condition"
+    name: "评估外部条件"
+    description: "评估天气和交通对外出的影响"
+    condition:
+      left: "${analyze_weather.weather_analysis.impact_level}"
+      operator: "in"
+      right: ["high", "medium"]
+    outputs: ["condition_assessment"]
+    next_nodes: ["adjust_timing"]
+
+  - id: "adjust_timing"
+    type: "transform"
+    name: "调整时间安排"
+    description: "根据各项因素调整建议的出发时间"
+    config:
+      script: |
+        # 综合各种因素调整时间
+        base_departure = commute_analysis.suggested_departure
+        
+        # 根据日程重要性调整
+        if priority_assessment.has_important_meetings:
+            base_departure -= timedelta(minutes=15)
+        
+        # 根据天气条件调整
+        if condition_assessment.weather_impact == "high":
+            base_departure -= timedelta(minutes=10)
+        
+        # 根据交通状况调整
+        if commute_analysis.difficulty == "hard":
+            base_departure -= timedelta(minutes=20)
+        
+        result = {
+            "final_departure_time": base_departure.isoformat(),
+            "time_adjustment_reasons": ["schedule", "weather", "traffic"],
+            "earlier_by_minutes": 45  # 示例调整时间
+        }
+    inputs:
+      commute_analysis: "${analyze_commute.commute_analysis}"
+      priority_assessment: "${assess_priority.priority_assessment}"
+      condition_assessment: "${assess_conditions.condition_assessment}"
+    outputs: ["timing_adjustment"]
+    next_nodes: ["prepare_recommendations"]
+
+  - id: "prepare_recommendations"
+    type: "transform"
+    name: "准备最终建议"
+    description: "整合所有分析结果生成最终建议"
+    config:
+      script: |
+        # 整合所有信息生成最终建议
+        recommendations = {
+            "departure_time": timing_adjustment.final_departure_time,
+            "route_info": {
+                "duration": f"{commute_analysis.duration_minutes}分钟",
+                "traffic": commute_analysis.traffic_status
+            },
+            "weather_info": {
+                "current": current_weather.weather_condition,
+                "temperature": f"{current_weather.temperature}°C"
+            },
+            "schedule_notes": f"今日有{todays_events.total_count}个安排",
+            "additional_tips": []
+        }
+        
+        # 添加个性化建议
+        if weather_analysis.impact_level == "high":
+            recommendations["additional_tips"].append("注意天气变化，携带雨具")
+        if commute_analysis.difficulty == "hard":
+            recommendations["additional_tips"].append("预留充足时间，避免迟到")
+        
+        result = recommendations
+    inputs:
+      timing_adjustment: "${adjust_timing.timing_adjustment}"
+      commute_analysis: "${analyze_commute.commute_analysis}"
+      current_weather: "${get_weather.current_weather}"
+      todays_events: "${check_calendar.todays_events}"
+      weather_analysis: "${analyze_weather.weather_analysis}"
+    outputs: ["final_recommendations"]
+    next_nodes: ["send_morning_notification"]
+
+  - id: "send_morning_notification"
+    type: "mcp_tool"
+    name: "发送早晨通知"
+    description: "将综合分析结果发送到钉钉"
+    config:
+      server: "dingtalk-mcp-server"
+      tool: "send_markdown_message"
+    inputs:
+      title: "🌅 今日出行建议"
+      text: |
+        ## 🌅 今日出行综合建议
+        
+        **建议出发时间**: ${prepare_recommendations.final_recommendations.departure_time}
+        
+        🚗 **通勤信息**
+        - 预计时长: ${prepare_recommendations.final_recommendations.route_info.duration}
+        - 路况状态: ${prepare_recommendations.final_recommendations.route_info.traffic}
+        
+        ☀️ **天气情况**
+        - 当前天气: ${prepare_recommendations.final_recommendations.weather_info.current}
+        - 温度: ${prepare_recommendations.final_recommendations.weather_info.temperature}
+        
+        📅 **日程提醒**
+        - ${prepare_recommendations.final_recommendations.schedule_notes}
+        
+        💡 **贴心提示**
+        ${'\n'.join(['- ' + tip for tip in prepare_recommendations.final_recommendations.additional_tips])}
+        
+        > 祝您一天顺利！ 🎯
+    outputs: ["notification_result"]
+    next_nodes: ["morning_summary"]
+
+  - id: "morning_summary"
+    type: "end"
+    name: "早晨检查完成"
+    description: "早晨例行检查流程完成"
+    config:
+      summary_script: |
+        # 生成执行摘要
+        summary = {
+            "status": "completed",
+            "execution_time": datetime.now().isoformat(),
+            "components_checked": ["calendar", "weather", "traffic", "route"],
+            "notifications_sent": 1
+        }

@@ -1,0 +1,27 @@
+# 配置示例文件
+# 将以下内容复制到 commute_assistant.py 的配置区域
+
+# ==================== 配置区域（示例）====================
+
+# 高德地图配置
+AMAP_API_KEY = "your_amap_api_key_here"  # 替换为你的实际API Key
+HOME_LOCATION = "116.481485,39.990464"   # 北京示例坐标
+WORK_LOCATION = "116.436795,39.974805"   # 北京示例坐标
+
+# 钉钉配置
+DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=your_token_here"
+DINGTALK_SECRET = "your_secret_here"  # 如果没有加签可以留空
+
+# ======================================================
+
+# 配置说明：
+# 1. AMAP_API_KEY: 从高德开放平台获取的Web服务API Key
+# 2. HOME_LOCATION: 家的经纬度坐标，格式为"经度,纬度"
+# 3. WORK_LOCATION: 公司的经纬度坐标，格式为"经度,纬度"  
+# 4. DINGTALK_WEBHOOK: 钉钉群机器人的Webhook URL
+# 5. DINGTALK_SECRET: 钉钉机器人的加签密钥（可选）
+
+# 坐标获取方法：
+# 1. 打开高德地图网页版
+# 2. 右键点击你要的位置
+# 3. 选择"复制坐标"或查看经纬度信息

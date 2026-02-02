@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP工作流可视化设计器</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* 左侧工具栏 */
+        .toolbar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .toolbar h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #ecf0f1;
+        }
+
+        .node-types {
+            margin-bottom: 30px;
+        }
+
+        .node-type {
+            background: #34495e;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: grab;
+            transition: all 0.2s;
+            border-left: 4px solid #3498db;
+        }
+
+        .node-type:hover {
+            background: #3d566e;
+            transform: translateX(5px);
+        }
+
+        .node-type.start { border-left-color: #2ecc71; }
+        .node-type.end { border-left-color: #e74c3c; }
+        .node-type.mcp { border-left-color: #9b59b6; }
+        .node-type.decision { border-left-color: #f39c12; }
+        .node-type.task { border-left-color: #1abc9c; }
+
+        .node-icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* 中间画布区域 */
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .canvas-header {
+            background: #34495e;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workflow-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .header-actions button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin-left: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .header-actions button:hover {
+            background: #2980b9;
+        }
+
+        .canvas-content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #mermaid-chart {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+
+        /* 右侧面板 */
+        .properties-panel {
+            width: 300px;
+            background: #ecf0f1;
+            padding: 20px;
+            overflow-y: auto;
+            border-left: 1px solid #bdc3c7;
+        }
+
+        .panel-section {
+            margin-bottom: 25px;
+        }
+
+        .panel-section h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* 状态指示器 */
+        .status-indicators {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-dot.healthy { background: #2ecc71; }
+        .status-dot.warning { background: #f39c12; }
+        .status-dot.error { background: #e74c3c; }
+
+        /* 模态框 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+        }
+
+        .modal-footer {
+            margin-top: 25px;
+            text-align: right;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .toolbar, .properties-panel {
+                width: 100%;
+                height: auto;
+            }
+            
+            .toolbar {
+                order: 1;
+            }
+            
+            .canvas-container {
+                order: 2;
+                flex: 3;
+            }
+            
+            .properties-panel {
+                order: 3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- 左侧工具栏 -->
+            <div class="toolbar">
+                <h2>🧩 节点库</h2>
+                
+                <div class="node-types">
+                    <div class="node-type start" draggable="true" @dragstart="dragStart($event, 'start')">
+                        <span class="node-icon">🟢</span>
+                        开始节点
+                    </div>
+                    
+                    <div class="node-type end" draggable="true" @dragstart="dragStart($event, 'end')">
+                        <span class="node-icon">🔴</span>
+                        结束节点
+                    </div>
+                    
+                    <div class="node-type mcp" draggable="true" @dragstart="dragStart($event, 'mcp')">
+                        <span class="node-icon">🔧</span>
+                        MCP工具节点
+                    </div>
+                    
+                    <div class="node-type decision" draggable="true" @dragstart="dragStart($event, 'decision')">
+                        <span class="node-icon">🔀</span>
+                        决策节点
+                    </div>
+                    
+                    <div class="node-type task" draggable="true" @dragstart="dragStart($event, 'task')">
+                        <span class="node-icon">📝</span>
+                        任务节点
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>📊 工作流统计</h3>
+                    <div class="status-indicators">
+                        <div class="status-item">
+                            <div class="status-dot healthy"></div>
+                            节点: {{ workflow.nodes.length }}
+                        </div>
+                        <div class="status-item">
+                            <div class="status-dot warning"></div>
+                            连接: {{ getConnectionCount() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中间画布 -->
+            <div class="canvas-container">
+                <div class="canvas-header">
+                    <div class="workflow-title">
+                        {{ workflow.name || '未命名工作流' }}
+                    </div>
+                    <div class="header-actions">
+                        <button @click="showNewWorkflowModal = true">📄 新建</button>
+                        <button @click="saveWorkflow">💾 保存</button>
+                        <button @click="exportWorkflow">📤 导出</button>
+                        <button @click="executeWorkflow">▶️ 执行</button>
+                    </div>
+                </div>
+                
+                <div class="canvas-content">
+                    <div id="mermaid-chart"></div>
+                </div>
+            </div>
+
+            <!-- 右侧属性面板 -->
+            <div class="properties-panel">
+                <div v-if="selectedNode">
+                    <div class="panel-section">
+                        <h3>⚙️ 节点属性</h3>
+                        
+                        <div class="form-group">
+                            <label>节点ID</label>
+                            <input v-model="selectedNode.id" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>节点名称</label>
+                            <input v-model="selectedNode.name" @input="updateChart">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>节点类型</label>
+                            <select v-model="selectedNode.type" @change="updateChart">
+                                <option value="start">开始节点</option>
+                                <option value="end">结束节点</option>
+                                <option value="mcp">MCP工具节点</option>
+                                <option value="decision">决策节点</option>
+                                <option value="task">任务节点</option>
+                            </select>
+                        </div>
+                        
+                        <div v-if="selectedNode.type === 'mcp'" class="form-group">
+                            <label>MCP服务器</label>
+                            <select v-model="selectedNode.config.server" @change="updateChart">
+                                <option value="">请选择服务器</option>
+                                <option value="amap-mcp-server">高德地图服务器</option>
+                                <option value="dingtalk-mcp-server">钉钉服务器</option>
+                                <option value="weather-mcp-server">天气服务器</option>
+                                <option value="calendar-mcp-server">日历服务器</option>
+                            </select>
+                        </div>
+                        
+                        <div v-if="selectedNode.type === 'mcp'" class="form-group">
+                            <label>工具名称</label>
+                            <input v-model="selectedNode.config.tool" @input="updateChart" placeholder="例如: route_planning">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>描述</label>
+                            <textarea v-model="selectedNode.description" @input="updateChart" placeholder="节点描述..."></textarea>
+                        </div>
+                        
+                        <button class="btn btn-secondary" @click="deleteSelectedNode">🗑️ 删除节点</button>
+                    </div>
+                </div>
+                
+                <div v-else>
+                    <div class="panel-section">
+                        <h3>ℹ️ 工作流信息</h3>
+                        <p>请在左侧拖拽节点到画布中，或点击画布中的节点进行编辑。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新建工作流模态框 -->
+        <div class="modal" v-if="showNewWorkflowModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>创建工作流</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label>工作流名称</label>
+                    <input v-model="newWorkflowName" placeholder="请输入工作流名称">
+                </div>
+                
+                <div class="form-group">
+                    <label>描述</label>
+                    <textarea v-model="newWorkflowDescription" placeholder="工作流描述..."></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @click="showNewWorkflowModal = false">取消</button>
+                    <button class="btn btn-success" @click="createNewWorkflow">创建</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 执行结果模态框 -->
+        <div class="modal" v-if="showExecutionResult">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>执行结果</h2>
+                </div>
+                
+                <div v-if="executionResult">
+                    <p><strong>状态:</strong> {{ executionResult.status }}</p>
+                    <p><strong>耗时:</strong> {{ executionResult.duration }}ms</p>
+                    <div v-if="executionResult.error">
+                        <p><strong>错误:</strong></p>
+                        <pre>{{ executionResult.error }}</pre>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @click="showExecutionResult = false">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    workflow: {
+                        name: '默认工作流',
+                        description: '通过可视化设计器创建的工作流',
+                        version: '1.0.0',
+                        start_node: null,
+                        nodes: [],
+                        connections: []
+                    },
+                    selectedNode: null,
+                    showNewWorkflowModal: false,
+                    showExecutionResult: false,
+                    newWorkflowName: '',
+                    newWorkflowDescription: '',
+                    executionResult: null,
+                    nodeIdCounter: 1
+                };
+            },
+            
+            mounted() {
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: 'default',
+                    securityLevel: 'loose',
+                    flowchart: {
+                        useMaxWidth: true,
+                        htmlLabels: true
+                    }
+                });
+                
+                this.initDefaultWorkflow();
+                this.updateChart();
+            },
+            
+            methods: {
+                dragStart(event, nodeType) {
+                    event.dataTransfer.setData('text/plain', nodeType);
+                },
+                
+                initDefaultWorkflow() {
+                    // 创建默认的开始和结束节点
+                    const startNode = {
+                        id: 'start',
+                        type: 'start',
+                        name: '开始',
+                        description: '工作流起始点'
+                    };
+                    
+                    const endNode = {
+                        id: 'end',
+                        type: 'end',
+                        name: '结束',
+                        description: '工作流结束点'
+                    };
+                    
+                    this.workflow.nodes = [startNode, endNode];
+                    this.workflow.start_node = 'start';
+                },
+                
+                createNewWorkflow() {
+                    if (!this.newWorkflowName.trim()) {
+                        alert('请输入工作流名称');
+                        return;
+                    }
+                    
+                    this.workflow = {
+                        name: this.newWorkflowName,
+                        description: this.newWorkflowDescription,
+                        version: '1.0.0',
+                        start_node: null,
+                        nodes: [],
+                        connections: []
+                    };
+                    
+                    this.selectedNode = null;
+                    this.nodeIdCounter = 1;
+                    this.showNewWorkflowModal = false;
+                    this.newWorkflowName = '';
+                    this.newWorkflowDescription = '';
+                    
+                    this.initDefaultWorkflow();
+                    this.updateChart();
+                },
+                
+                addNode(nodeType, position = null) {
+                    const nodeId = `${nodeType}_${this.nodeIdCounter++}`;
+                    let newNode;
+                    
+                    switch(nodeType) {
+                        case 'start':
+                            newNode = {
+                                id: nodeId,
+                                type: 'start',
+                                name: '开始节点',
+                                description: '工作流起始点'
+                            };
+                            break;
+                            
+                        case 'end':
+                            newNode = {
+                                id: nodeId,
+                                type: 'end',
+                                name: '结束节点',
+                                description: '工作流结束点'
+                            };
+                            break;
+                            
+                        case 'mcp':
+                            newNode = {
+                                id: nodeId,
+                                type: 'mcp',
+                                name: 'MCP工具节点',
+                                description: '调用MCP服务器工具',
+                                config: {
+                                    server: '',
+                                    tool: ''
+                                }
+                            };
+                            break;
+                            
+                        case 'decision':
+                            newNode = {
+                                id: nodeId,
+                                type: 'decision',
+                                name: '决策节点',
+                                description: '条件判断节点'
+                            };
+                            break;
+                            
+                        case 'task':
+                            newNode = {
+                                id: nodeId,
+                                type: 'task',
+                                name: '任务节点',
+                                description: '执行特定任务'
+                            };
+                            break;
+                    }
+                    
+                    this.workflow.nodes.push(newNode);
+                    this.selectedNode = newNode;
+                    this.updateChart();
+                },
+                
+                deleteSelectedNode() {
+                    if (!this.selectedNode || ['start', 'end'].includes(this.selectedNode.id)) {
+                        alert('不能删除开始或结束节点');
+                        return;
+                    }
+                    
+                    const index = this.workflow.nodes.findIndex(n => n.id === this.selectedNode.id);
+                    if (index > -1) {
+                        this.workflow.nodes.splice(index, 1);
+                        this.selectedNode = null;
+                        this.updateChart();
+                    }
+                },
+                
+                updateChart() {
+                    const chartDefinition = this.generateMermaidChart();
+                    const element = document.getElementById('mermaid-chart');
+                    
+                    if (element) {
+                        element.innerHTML = chartDefinition;
+                        mermaid.init(undefined, element);
+                    }
+                },
+                
+                generateMermaidChart() {
+                    let chart = 'graph TD\n';
+                    
+                    // 添加节点
+                    this.workflow.nodes.forEach(node => {
+                        let nodeStyle = '';
+                        let nodeLabel = `${node.name}`;
+                        
+                        switch(node.type) {
+                            case 'start':
+                                nodeStyle = '[[开始]]';
+                                break;
+                            case 'end':
+                                nodeStyle = '[[(结束)]]';
+                                break;
+                            case 'mcp':
+                                nodeStyle = '{{MCP工具}}';
+                                if (node.config && node.config.server) {
+                                    nodeLabel += `\n[${node.config.server}]`;
+                                }
+                                break;
+                            case 'decision':
+                                nodeStyle = '{决策}';
+                                break;
+                            case 'task':
+                                nodeStyle = '[任务]';
+                                break;
+                        }
+                        
+                        chart += `    ${node.id}${nodeStyle} --> "${nodeLabel}"\n`;
+                    });
+                    
+                    // 添加连接线（简单的顺序连接）
+                    for (let i = 0; i < this.workflow.nodes.length - 1; i++) {
+                        const currentNode = this.workflow.nodes[i];
+                        const nextNode = this.workflow.nodes[i + 1];
+                        chart += `    ${currentNode.id} --> ${nextNode.id}\n`;
+                    }
+                    
+                    return chart;
+                },
+                
+                getConnectionCount() {
+                    return Math.max(0, this.workflow.nodes.length - 1);
+                },
+                
+                saveWorkflow() {
+                    const workflowData = JSON.stringify(this.workflow, null, 2);
+                    const blob = new Blob([workflowData], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${this.workflow.name || 'workflow'}.json`;
+                    a.click();
+                    
+                    URL.revokeObjectURL(url);
+                    alert('工作流已保存！');
+                },
+                
+                exportWorkflow() {
+                    const yamlContent = this.convertToYAML();
+                    const blob = new Blob([yamlContent], { type: 'text/yaml' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${this.workflow.name || 'workflow'}.yaml`;
+                    a.click();
+                    
+                    URL.revokeObjectURL(url);
+                },
+                
+                convertToYAML() {
+                    // 简单的YAML转换
+                    let yaml = `name: "${this.workflow.name}"\n`;
+                    yaml += `description: "${this.workflow.description}"\n`;
+                    yaml += `version: "${this.workflow.version}"\n`;
+                    yaml += `start_node: "${this.workflow.start_node}"\n\n`;
+                    yaml += 'nodes:\n';
+                    
+                    this.workflow.nodes.forEach(node => {
+                        yaml += `  - id: "${node.id}"\n`;
+                        yaml += `    type: "${node.type}"\n`;
+                        yaml += `    name: "${node.name}"\n`;
+                        if (node.description) {
+                            yaml += `    description: "${node.description}"\n`;
+                        }
+                        if (node.config) {
+                            yaml += `    config:\n`;
+                            Object.keys(node.config).forEach(key => {
+                                yaml += `      ${key}: "${node.config[key]}"\n`;
+                            });
+                        }
+                        yaml += '\n';
+                    });
+                    
+                    return yaml;
+                },
+                
+                async executeWorkflow() {
+                    try {
+                        // 模拟执行过程
+                        this.executionResult = {
+                            status: 'executing',
+                            duration: 0
+                        };
+                        
+                        // 模拟异步执行
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        
+                        this.executionResult = {
+                            status: 'success',
+                            duration: Math.floor(Math.random() * 1000) + 500,
+                            result: '工作流执行成功'
+                        };
+                        
+                    } catch (error) {
+                        this.executionResult = {
+                            status: 'failed',
+                            duration: 0,
+                            error: error.message
+                        };
+                    }
+                    
+                    this.showExecutionResult = true;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

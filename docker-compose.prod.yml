@@ -1,0 +1,142 @@
+version: '3.8'
+
+# 生产环境配置
+# 使用独立的网络和更严格的安全设置
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: mcp_redis_prod
+    ports:
+      - "127.0.0.1:6379:6379"  # 仅本地访问
+    volumes:
+      - redis_data_prod:/data
+      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: unless-stopped
+    networks:
+      - mcp_internal_network
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+    container_name: mcp_app_prod
+    ports:
+      - "127.0.0.1:8000:8000"  # 仅本地访问，建议配合nginx使用
+    environment:
+      - APP_ENV=production
+      - DEBUG=False
+      - LOG_LEVEL=WARNING
+    env_file:
+      - .env.production
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - mcp_internal_network
+      - mcp_external_network
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+    container_name: mcp_celery_worker_prod
+    command: celery -A app.workers.celery_app worker --loglevel=warning --concurrency=4
+    env_file:
+      - .env.production
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - mcp_internal_network
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    user: celery
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+    container_name: mcp_celery_beat_prod
+    command: celery -A app.workers.celery_app beat --loglevel=warning
+    env_file:
+      - .env.production
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - mcp_internal_network
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    user: celery
+
+  nginx:
+    image: nginx:alpine
+    container_name: mcp_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - mcp_external_network
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  redis_data_prod:
+  app_logs_prod:
+  app_data_prod:
+
+networks:
+  mcp_internal_network:
+    driver: bridge
+    internal: true  # 内部网络，不对外暴露
+  mcp_external_network:
+    driver: bridge
