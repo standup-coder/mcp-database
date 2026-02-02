@@ -100,14 +100,14 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
 
 # 3. 安装依赖
-pip install -r requirements.txt
+pip install -r config/requirements.txt
 
 # 4. 配置环境变量
-cp .env.example .env
+cp config/.env.example .env
 # 编辑.env文件，填入必要的API密钥和配置
 
 # 5. 启动服务
-docker-compose up -d
+docker-compose -f deployment/docker-compose.yml up -d
 
 # 6. 验证服务状态
 curl http://localhost:8000/health
@@ -126,6 +126,9 @@ pytest tests/ -v
 flake8 app/
 black app/
 mypy app/
+
+# 运行配置检查
+python scripts/health_check.py
 ```
 
 ## 📁 项目结构
@@ -172,11 +175,21 @@ mcp4coder/
 │   └── Dockerfile               # 应用镜像
 ├── docs/                        # 项目文档
 ├── logs/                        # 日志目录
-├── requirements.txt             # Python依赖
-├── docker-compose.yml           # Docker编排
-├── pytest.ini                   # 测试配置
-├── .env.example                 # 环境变量示例
-└── README.md                    # 项目说明
+├── config/                      # 配置文件目录
+│   ├── .env.example             # 环境变量示例
+│   ├── requirements.txt         # Python开发依赖
+│   ├── requirements-prod.txt    # 生产环境依赖
+│   └── pytest.ini               # 测试配置
+├── deployment/                  # 部署配置目录
+│   ├── docker-compose.yml       # 开发环境Docker编排
+│   └── docker-compose.prod.yml  # 生产环境Docker编排
+├── documentation/               # 文档目录
+│   ├── README_PROFESSIONAL.md   # 专业版README
+│   ├── CHANGELOG.md             # 更新日志
+│   ├── PROJECT_SUMMARY.md       # 项目总结
+│   └── SECURITY_CHECKLIST.md    # 安全检查清单
+├── LICENSE                      # 开源许可证
+└── README.md                    # 项目说明(主文档)
 ```
 
 ## ⚙️ 配置说明
@@ -228,6 +241,9 @@ COMMUTE_CHECK_CRON=0 30 8 * * *              # 每天8:30执行
 ```bash
 # 启动开发模式验证配置
 python -c "from app.config.settings import settings; print('配置加载成功')"
+
+# 运行健康检查
+python scripts/health_check.py
 ```
 
 ## 🧪 测试
@@ -341,6 +357,21 @@ docker-compose restart
 # 停止服务
 docker-compose down
 ```
+
+## 📚 相关文档
+
+| 文档 | 路径 | 说明 | 适用人群 |
+|------|------|------|----------|
+| [小白模式说明](dumb_mode/README_DUMB.md) | `dumb_mode/README_DUMB.md` | 5分钟快速上手指南 | 新手用户 |
+| [架构设计文档](docs/architecture.md) | `docs/architecture.md` | 系统架构详解 | 开发者 |
+| [API接口文档](docs/api_reference.md) | `docs/api_reference.md` | RESTful API说明 | 开发者 |
+| [部署手册](docs/deployment.md) | `docs/deployment.md` | 生产环境部署指南 | 运维人员 |
+| [开发指南](docs/development.md) | `docs/development.md` | 贡献和开发说明 | 开发者 |
+| [快速开始指南](docs/quick_start_guide.md) | `docs/quick_start_guide.md` | 详细操作步骤 | 所有用户 |
+| [更新日志](documentation/CHANGELOG.md) | `documentation/CHANGELOG.md` | 版本变更记录 | 所有用户 |
+| [项目总结](documentation/PROJECT_SUMMARY.md) | `documentation/PROJECT_SUMMARY.md` | 完整项目报告 | 管理者 |
+| [安全检查](documentation/SECURITY_CHECKLIST.md) | `documentation/SECURITY_CHECKLIST.md` | 安全配置清单 | 安全人员 |
+| [专业版README](documentation/README_PROFESSIONAL.md) | `documentation/README_PROFESSIONAL.md` | 详细技术文档 | 开发者 |
 
 ## 🤝 贡献指南
 
