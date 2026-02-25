@@ -6,13 +6,17 @@ FastAPI应用配置和路由定义
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, Any, List
+from pathlib import Path
 
 from .config.settings import settings
 from .utils.logger import get_logger, setup_logger
 from .services.commute_service import CommuteService
 from .workers.tasks import check_commute_and_notify, health_check
+from .mcp.server_factory import server_factory, ServerType
 
 # 初始化日志系统
 setup_logger()
@@ -56,10 +60,101 @@ async def shutdown_event():
 async def root() -> Dict[str, Any]:
     """根路径"""
     return {
-        "message": "欢迎使用MCP智能通勤助手API",
+        "message": "欢迎使用MCP工具大全API",
         "version": "1.0.0",
         "timestamp": datetime.now().isoformat()
     }
+
+
+# MCP服务器管理端点
+@app.get("/mcp/servers")
+async def list_mcp_servers() -> Dict[str, Any]:
+    """列出所有可用的MCP服务器"""
+    servers = server_factory.list_available_servers()
+    return {
+        "servers": [
+            {
+                "name": name,
+                "config": {
+                    "command": config.command,
+                    "args": config.args,
+                    "timeout": config.timeout,
+                    "max_concurrent": config.max_concurrent,
+                    "auto_restart": config.auto_restart
+                }
+            }
+            for name, config in servers.items()
+        ],
+        "total": len(servers),
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+@app.get("/mcp/servers/{server_name}")
+async def get_mcp_server_info(server_name: str) -> Dict[str, Any]:
+    """获取指定MCP服务器信息"""
+    config = server_factory.get_server_config(server_name)
+    if not config:
+        raise HTTPException(status_code=404, detail=f"服务器不存在: {server_name}")
+    
+    return {
+        "name": config.name,
+        "command": config.command,
+        "args": config.args,
+        "env": config.env,
+        "working_dir": config.working_dir,
+        "timeout": config.timeout,
+        "max_concurrent": config.max_concurrent,
+        "auto_restart": config.auto_restart,
+        "health_check_interval": config.health_check_interval,
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+@app.get("/mcp/server-types")
+async def list_server_types() -> Dict[str, Any]:
+    """列出所有可用的服务器类型"""
+    return {
+        "server_types": [
+            {"value": t.value, "name": t.name}
+            for t in ServerType
+        ],
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+@app.post("/mcp/execute/{server_name}/{tool_name}")
+async def execute_mcp_tool(
+    server_name: str,
+    tool_name: str,
+    params: Dict[str, Any] = {}
+) -> Dict[str, Any]:
+    """执行MCP服务器工具"""
+    try:
+        server_config = server_factory.get_server_config(server_name)
+        if not server_config:
+            raise HTTPException(status_code=404, detail=f"服务器不存在: {server_name}")
+        
+        module_path = f"app.mcp.servers.{server_name}_server"
+        module = __import__(module_path, fromlist=[""])
+        server_class_name = f"{server_name.upper()}MCPServer"
+        server_class = getattr(module, server_class_name, None)
+        
+        if not server_class:
+            raise HTTPException(status_code=404, detail=f"未找到服务器类: {server_class_name}")
+        
+        server = server_class(config={})
+        result = await server.execute_tool(tool_name, params)
+        
+        return {
+            "server": server_name,
+            "tool": tool_name,
+            "result": result,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"MCP工具执行失败: {server_name}/{tool_name}", error=str(e))
+        raise HTTPException(status_code=500, detail=f"工具执行失败: {str(e)}")
 
 
 @app.get("/health")
@@ -182,6 +277,14 @@ async def global_exception_handler(request, exc):
 def create_app() -> FastAPI:
     """创建应用实例"""
     return app
+
+
+@app.get("/ui")
+async def get_ui():
+    """MCP管理界面"""
+    import os
+    web_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "mcp_manager.html")
+    return FileResponse(web_path)
 
 
 if __name__ == "__main__":

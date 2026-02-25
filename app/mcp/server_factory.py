@@ -23,6 +23,17 @@ class ServerType(Enum):
     NEWS = "news"
     STOCK = "stock"
     TRANSLATION = "translation"
+    FILESYSTEM = "filesystem"
+    GIT = "git"
+    DATABASE = "database"
+    HTTP = "http"
+    SLACK = "slack"
+    GITHUB = "github"
+    BRAVE_SEARCH = "brave_search"
+    NOTION = "notion"
+    GOOGLE_SHEETS = "google_sheets"
+    BROWSER = "browser"
+    MEMORY = "memory"
 
 
 class ServerFactory:
@@ -79,10 +90,132 @@ class ServerFactory:
                 max_concurrent=15,
                 auto_restart=True,
                 health_check_interval=120
-            )
+            ),
+            ServerType.FILESYSTEM: ManagedServer(
+                name="filesystem-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.filesystem_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.GIT: ManagedServer(
+                name="git-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.git_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=10,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.DATABASE: ManagedServer(
+                name="database-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.database_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=15,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.HTTP: ManagedServer(
+                name="http-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.http_client_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=30,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.SLACK: ManagedServer(
+                name="slack-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.slack_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=10,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.GITHUB: ManagedServer(
+                name="github-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.github_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.BRAVE_SEARCH: ManagedServer(
+                name="brave-search-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.brave_search_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.NOTION: ManagedServer(
+                name="notion-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.notion_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=15,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.GOOGLE_SHEETS: ManagedServer(
+                name="google-sheets-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.google_sheets_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=15,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.BROWSER: ManagedServer(
+                name="browser-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.browser_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=5,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.MEMORY: ManagedServer(
+                name="memory-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.memory_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=120
+            ),
         }
         
-        self.registered_configs.update(builtin_configs)
+        for key, value in builtin_configs.items():
+            self.registered_configs[key.value] = value
         logger.info("内置MCP服务器配置加载完成")
     
     def register_custom_server(

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP工具大全 - 开发者工具集合</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #667eea;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .server-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .server-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .server-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .server-card .description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .server-card .tools {
+            margin-top: 1rem;
+        }
+        
+        .tool-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+            color: #555;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
+        .console {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            min-height: 400px;
+            max-height: 600px;
+            overflow: auto;
+        }
+        
+        .console-line {
+            margin: 0.25rem 0;
+        }
+        
+        .console-line .time {
+            color: #6a9955;
+        }
+        
+        .console-line .info {
+            color: #4fc1ff;
+        }
+        
+        .console-line .error {
+            color: #f48771;
+        }
+        
+        .console-line .success {
+            color: #4ec9b0;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            font-family: monospace;
+        }
+        
+        .api-list {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .api-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .api-item:last-child {
+            border-bottom: none;
+        }
+        
+        .method {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .method.get {
+            background: #61affe;
+            color: white;
+        }
+        
+        .method.post {
+            background: #49cc90;
+            color: white;
+        }
+        
+        .method.put {
+            background: #fca130;
+            color: white;
+        }
+        
+        .method.delete {
+            background: #f93e3e;
+            color: white;
+        }
+        
+        .api-path {
+            font-family: monospace;
+            color: #333;
+        }
+        
+        .api-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛠️ MCP工具大全</h1>
+        <p>开发者必备的MCP服务器工具集合 - 统一管理，即插即用</p>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-tab="servers">MCP服务器</button>
+            <button class="tab" data-tab="console">测试控制台</button>
+            <button class="tab" data-tab="api">API文档</button>
+        </div>
+        
+        <div id="servers" class="tab-content active">
+            <div class="server-grid" id="serverGrid">
+                <!-- 服务器卡片将通过JS动态加载 -->
+            </div>
+        </div>
+        
+        <div id="console" class="tab-content">
+            <div class="form-group">
+                <label>选择服务器</label>
+                <select id="consoleServer">
+                    <option value="">加载中...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>选择工具</label>
+                <select id="consoleTool">
+                    <option value="">请先选择服务器</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>参数 (JSON)</label>
+                <textarea id="consoleParams" placeholder='{"param1": "value1"}'></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="executeTool()">执行</button>
+            
+            <h3 style="margin: 1.5rem 0 1rem;">执行结果</h3>
+            <div class="console" id="consoleOutput">
+                <div class="console-line"><span class="time">等待执行...</span></div>
+            </div>
+        </div>
+        
+        <div id="api" class="tab-content">
+            <div class="api-list">
+                <div class="api-item">
+                    <span class="method get">GET</span>
+                    <div>
+                        <div class="api-path">/mcp/servers</div>
+                        <div class="api-desc">列出所有可用的MCP服务器</div>
+                    </div>
+                </div>
+                <div class="api-item">
+                    <span class="method get">GET</span>
+                    <div>
+                        <div class="api-path">/mcp/servers/{server_name}</div>
+                        <div class="api-desc">获取指定MCP服务器信息</div>
+                    </div>
+                </div>
+                <div class="api-item">
+                    <span class="method get">GET</span>
+                    <div>
+                        <div class="api-path">/mcp/server-types</div>
+                        <div class="api-desc">列出所有可用的服务器类型</div>
+                    </div>
+                </div>
+                <div class="api-item">
+                    <span class="method post">POST</span>
+                    <div>
+                        <div class="api-path">/mcp/execute/{server_name}/{tool_name}</div>
+                        <div class="api-desc">执行MCP服务器工具</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const MCP_SERVERS = {
+            amap: {
+                name: "高德地图",
+                description: "路线规划、导航、地理编码",
+                tools: ["route", "geocode", "weather", "search"]
+            },
+            dingtalk: {
+                name: "钉钉",
+                description: "消息推送、群通知、机器人",
+                tools: ["send_message", "send_markdown", "get_callback"]
+            },
+            weather: {
+                name: "天气",
+                description: "实时天气、预报、空气质量",
+                tools: ["current", "forecast", "air_quality"]
+            },
+            calendar: {
+                name: "日历",
+                description: "日程管理、事件提醒",
+                tools: ["create_event", "list_events", "delete_event"]
+            },
+            filesystem: {
+                name: "文件系统",
+                description: "文件读写、目录操作",
+                tools: ["read_file", "write_file", "list_directory", "create_directory", "delete_file", "search_files", "get_file_info"]
+            },
+            git: {
+                name: "Git",
+                description: "版本控制操作",
+                tools: ["status", "log", "branch", "diff", "commit", "push", "pull", "checkout", "stash"]
+            },
+            database: {
+                name: "数据库",
+                description: "MySQL、PostgreSQL、SQLite、Redis",
+                tools: ["execute", "query", "list_tables", "describe_table", "get_keys", "set_value", "get_value"]
+            },
+            http: {
+                name: "HTTP客户端",
+                description: "发送HTTP请求",
+                tools: ["get", "post", "put", "delete", "request"]
+            },
+            github: {
+                name: "GitHub",
+                description: "仓库管理、Issue、PR",
+                tools: ["get_user", "list_repos", "get_repo", "list_issues", "create_issue", "list_pulls", "get_file_content", "search_code", "search_repos", "list_commits"]
+            },
+            slack: {
+                name: "Slack",
+                description: "消息推送、频道管理",
+                tools: ["post_message", "post_markdown", "list_channels", "get_channel_info", "list_messages", "create_channel", "add_reaction", "list_users"]
+            },
+            brave_search: {
+                name: "Brave搜索",
+                description: "网页、新闻、图片、视频搜索",
+                tools: ["search", "news", "images", "videos"]
+            },
+            notion: {
+                name: "Notion",
+                description: "笔记、数据库、页面管理",
+                tools: ["search", "get_page", "create_page", "create_database", "query_database", "append_block_children", "list_databases"]
+            },
+            google_sheets: {
+                name: "Google表格",
+                description: "表格创建、读写、行列操作",
+                tools: ["create_spreadsheet", "read_range", "write_range", "append_row", "list_spreadsheets", "get_spreadsheet_info"]
+            },
+            browser: {
+                name: "浏览器",
+                description: "自动化浏览、截图、表单填写",
+                tools: ["navigate", "screenshot", "click", "fill", "get_text", "get_html", "evaluate", "wait_for_selector", "close"]
+            },
+            memory: {
+                name: "记忆库",
+                description: "持久化记忆、知识图谱",
+                tools: ["store", "retrieve", "search", "list_keys", "delete", "add_entity", "add_relation", "query_graph", "export"]
+            }
+        };
+        
+        // Tab切换
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // 渲染服务器卡片
+        function renderServers() {
+            const grid = document.getElementById('serverGrid');
+            grid.innerHTML = '';
+            
+            for (const [key, server] of Object.entries(MCP_SERVERS)) {
+                const card = document.createElement('div');
+                card.className = 'server-card';
+                card.innerHTML = `
+                    <h3>${server.name}</h3>
+                    <p class="description">${server.description}</p>
+                    <div class="tools">
+                        ${server.tools.map(t => `<span class="tool-badge">${t}</span>`).join('')}
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+        
+        // 初始化控制台
+        function initConsole() {
+            const select = document.getElementById('consoleServer');
+            select.innerHTML = '<option value="">选择服务器</option>';
+            for (const [key, server] of Object.entries(MCP_SERVERS)) {
+                select.innerHTML += `<option value="${key}">${server.name}</option>`;
+            }
+            
+            select.addEventListener('change', () => {
+                const toolSelect = document.getElementById('consoleTool');
+                const server = MCP_SERVERS[select.value];
+                if (server) {
+                    toolSelect.innerHTML = '<option value="">选择工具</option>';
+                    server.tools.forEach(t => {
+                        toolSelect.innerHTML += `<option value="${t}">${t}</option>`;
+                    });
+                } else {
+                    toolSelect.innerHTML = '<option value="">请先选择服务器</option>';
+                }
+            });
+        }
+        
+        // 执行工具
+        async function executeTool() {
+            const server = document.getElementById('consoleServer').value;
+            const tool = document.getElementById('consoleTool').value;
+            const paramsText = document.getElementById('consoleParams').value;
+            const output = document.getElementById('consoleOutput');
+            
+            if (!server || !tool) {
+                output.innerHTML = '<div class="console-line error">请选择服务器和工具</div>';
+                return;
+            }
+            
+            let params = {};
+            try {
+                if (paramsText) params = JSON.parse(paramsText);
+            } catch (e) {
+                output.innerHTML = '<div class="console-line error">JSON参数解析失败</div>';
+                return;
+            }
+            
+            output.innerHTML = '<div class="console-line"><span class="time">执行中...</span></div>';
+            
+            try {
+                const response = await fetch(`/mcp/execute/${server}/${tool}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(params)
+                });
+                const data = await response.json();
+                output.innerHTML = `<div class="console-line success">✓ 成功</div>
+                    <div class="console-line"><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+            } catch (e) {
+                output.innerHTML = `<div class="console-line error">✗ 请求失败: ${e.message}</div>`;
+            }
+        }
+        
+        // 初始化
+        renderServers();
+        initConsole();
+    </script>
+</body>
+</html>
