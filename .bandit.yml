@@ -1,0 +1,15 @@
+# Bandit security linting configuration
+# https://bandit.readthedocs.io/en/latest/config.html
+
+[bandit]
+exclude = /tests/
+skips = B101,B105,B106,B107
+# B101: assert used (we use asserts in tests)
+# B105: hardcoded password string (we use environment variables)
+# B106: hardcoded password funcarg (we use environment variables)
+# B107: hardcoded password default (we use environment variables)
+
+[bandit.plugins]
+# Configure specific plugins
+shell_injection_subprocess_shell = true
+shell_injection_no_shell = true

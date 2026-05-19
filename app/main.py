@@ -4,12 +4,12 @@ FastAPI应用配置和路由定义
 """
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from pathlib import Path
 
 from .config.settings import settings
@@ -17,6 +17,8 @@ from .utils.logger import get_logger, setup_logger
 from .services.commute_service import CommuteService
 from .workers.tasks import check_commute_and_notify, health_check
 from .mcp.server_factory import server_factory, ServerType
+from .middleware.auth import require_auth, optional_auth, check_rate_limit, create_access_token
+from .middleware.security import SecurityHeadersMiddleware, InputSanitizer, RequestValidator
 
 # 初始化日志系统
 setup_logger()
@@ -33,12 +35,38 @@ app = FastAPI(
 )
 
 # 添加CORS中间件
+# 安全改进：限制允许的来源，不再使用 *
+ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
+]
+
+# 在生产环境中，从环境变量加载允许的来源
+if settings.is_production:
+    import os
+    allowed_origins_env = os.environ.get("ALLOWED_ORIGINS", "")
+    if allowed_origins_env:
+        ALLOWED_ORIGINS = [origin.strip() for origin in allowed_origins_env.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-Request-ID"],
+)
+
+# 添加安全头中间件
+app.add_middleware(
+    SecurityHeadersMiddleware,
+    enable_hsts=settings.is_production,  # 仅在生产环境启用 HSTS
+    enable_csp=True,
+    enable_xss_protection=True,
+    enable_content_type_options=True,
+    enable_frame_options=True,
+    enable_referrer_policy=True,
 )
 
 
@@ -127,16 +155,25 @@ async def list_server_types() -> Dict[str, Any]:
 async def execute_mcp_tool(
     server_name: str,
     tool_name: str,
-    params: Dict[str, Any] = {}
+    params: Optional[Dict[str, Any]] = None,
+    auth: Dict[str, Any] = Depends(require_auth)  # 要求认证
 ) -> Dict[str, Any]:
     """执行MCP服务器工具"""
+    if params is None:
+        params = {}
+    
     try:
+        # 验证和净化输入
+        params = InputSanitizer.sanitize_dict(params)
+        
         server_config = server_factory.get_server_config(server_name)
         if not server_config:
             raise HTTPException(status_code=404, detail=f"服务器不存在: {server_name}")
         
+        # 安全改进：使用 importlib 替代 __import__
+        import importlib
         module_path = f"app.mcp.servers.{server_name}_server"
-        module = __import__(module_path, fromlist=[""])
+        module = importlib.import_module(module_path)
         server_class_name = f"{server_name.upper()}MCPServer"
         server_class = getattr(module, server_class_name, None)
         
@@ -152,9 +189,33 @@ async def execute_mcp_tool(
             "result": result,
             "timestamp": datetime.now().isoformat()
         }
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"MCP工具执行失败: {server_name}/{tool_name}", error=str(e))
         raise HTTPException(status_code=500, detail=f"工具执行失败: {str(e)}")
+
+
+@app.post("/auth/token")
+async def create_token(username: str, password: str) -> Dict[str, Any]:
+    """创建 JWT token（示例端点 - 生产环境应连接到用户数据库）"""
+    # 注意：这是示例实现，生产环境应使用安全的用户认证
+    if username == "admin" and password == "admin":  # 仅用于演示
+        access_token = create_access_token(data={"sub": username})
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "expires_in": 1800  # 30 minutes
+        }
+    raise HTTPException(status_code=401, detail="Invalid credentials")
+
+
+@app.get("/auth/me")
+async def get_current_user_info(auth: Dict[str, Any] = Depends(optional_auth)) -> Dict[str, Any]:
+    """获取当前认证用户信息"""
+    if auth is None:
+        return {"authenticated": False, "user": None}
+    return {"authenticated": True, "user": auth}
 
 
 @app.get("/health")

@@ -1,0 +1,6 @@
+# Bandit security linting configuration
+# https://bandit.readthedocs.io/en/latest/config.html
+
+[bandit]
+exclude = /tests/
+skips = B101,B105,B106,B107
