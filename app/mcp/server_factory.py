@@ -20,9 +20,6 @@ class ServerType(Enum):
     WEATHER = "weather"
     CALENDAR = "calendar"
     CUSTOM = "custom"
-    NEWS = "news"
-    STOCK = "stock"
-    TRANSLATION = "translation"
     FILESYSTEM = "filesystem"
     GIT = "git"
     DATABASE = "database"
@@ -34,6 +31,17 @@ class ServerType(Enum):
     GOOGLE_SHEETS = "google_sheets"
     BROWSER = "browser"
     MEMORY = "memory"
+    CONTEXT7 = "context7"
+    SEQUENTIAL_THINKING = "sequential_thinking"
+    DESKTOP_COMMANDER = "desktop_commander"
+    DOCFORK = "docfork"
+    DEEPWIKI = "deepwiki"
+    FIGMA = "figma"
+    REACTBITS = "reactbits"
+    E2B = "e2b"
+    SENTRY = "sentry"
+    LINEAR = "linear"
+    COMPOSIO = "composio"
 
 
 class ServerFactory:
@@ -212,6 +220,127 @@ class ServerFactory:
                 auto_restart=True,
                 health_check_interval=120
             ),
+            ServerType.CONTEXT7: ManagedServer(
+                name="context7-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.context7_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.SEQUENTIAL_THINKING: ManagedServer(
+                name="sequential-thinking-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.sequential_thinking_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.DESKTOP_COMMANDER: ManagedServer(
+                name="desktop-commander-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.desktop_commander_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=10,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.DOCFORK: ManagedServer(
+                name="docfork-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.docfork_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.DEEPWIKI: ManagedServer(
+                name="deepwiki-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.deepwiki_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=10,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.FIGMA: ManagedServer(
+                name="figma-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.figma_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=10,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.REACTBITS: ManagedServer(
+                name="reactbits-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.reactbits_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=20,
+                auto_restart=True,
+                health_check_interval=120
+            ),
+            ServerType.E2B: ManagedServer(
+                name="e2b-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.e2b_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=10,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.SENTRY: ManagedServer(
+                name="sentry-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.sentry_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=15,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.LINEAR: ManagedServer(
+                name="linear-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.linear_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=15,
+                auto_restart=True,
+                health_check_interval=60
+            ),
+            ServerType.COMPOSIO: ManagedServer(
+                name="composio-mcp-server",
+                command="python",
+                args=["-m", "app.mcp.servers.composio_server"],
+                env={"PYTHONPATH": "."},
+                working_dir=".",
+                timeout=300,
+                max_concurrent=15,
+                auto_restart=True,
+                health_check_interval=60
+            ),
         }
         
         for key, value in builtin_configs.items():
@@ -266,13 +395,14 @@ class ServerFactory:
     
     def get_server_module_path(self, server_type: ServerType) -> str:
         """获取服务器模块路径"""
-        module_paths = {
-            ServerType.AMAP: "app.mcp.servers.amap_server",
-            ServerType.DINGTALK: "app.mcp.servers.dingtalk_server",
-            ServerType.WEATHER: "app.mcp.servers.weather_server",
-            ServerType.CALENDAR: "app.mcp.servers.calendar_server",
+        special_paths = {
+            ServerType.HTTP: "app.mcp.servers.http_client_server",
+            ServerType.BRAVE_SEARCH: "app.mcp.servers.brave_search_server",
+            ServerType.GOOGLE_SHEETS: "app.mcp.servers.google_sheets_server",
         }
-        return module_paths.get(server_type, "")
+        if server_type in special_paths:
+            return special_paths[server_type]
+        return f"app.mcp.servers.{server_type.value}_server"
     
     async def load_server_class(self, server_type: ServerType) -> Optional[Type]:
         """动态加载服务器类"""

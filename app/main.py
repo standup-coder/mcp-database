@@ -199,13 +199,20 @@ async def execute_mcp_tool(
 @app.post("/auth/token")
 async def create_token(username: str, password: str) -> Dict[str, Any]:
     """创建 JWT token（示例端点 - 生产环境应连接到用户数据库）"""
-    # 注意：这是示例实现，生产环境应使用安全的用户认证
-    if username == "admin" and password == "admin":  # 仅用于演示
+    import os
+    if settings.is_production:
+        raise HTTPException(
+            status_code=403,
+            detail="Demo token endpoint is disabled in production. Use your own auth provider."
+        )
+    demo_username = os.environ.get("DEMO_USERNAME", "demo")
+    demo_password = os.environ.get("DEMO_PASSWORD", "demo")
+    if username == demo_username and password == demo_password:
         access_token = create_access_token(data={"sub": username})
         return {
             "access_token": access_token,
             "token_type": "bearer",
-            "expires_in": 1800  # 30 minutes
+            "expires_in": 1800
         }
     raise HTTPException(status_code=401, detail="Invalid credentials")
 

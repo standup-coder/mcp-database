@@ -1,7 +1,7 @@
 # 🚗 MCP4Coder - 智能通勤助手
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green)](../LICENSE)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/your-username/mcp4coder/actions)
 [![Coverage](https://img.shields.io/badge/coverage-85%25-yellow)](https://codecov.io/)
 
@@ -42,7 +42,7 @@ pip install -r requirements.txt
 python commute_assistant.py
 ```
 
-👉 [详细的小白模式使用说明](dumb_mode/README_DUMB.md)
+👉 [详细的小白模式使用说明](../dumb_mode/README_DUMB.md)
 
 ### 🏢 专业模式（开发者使用）
 
@@ -350,12 +350,12 @@ python -c "from app.config.settings import settings; print(settings.dict())"
 
 | 文档 | 说明 | 适用人群 |
 |------|------|----------|
-| [小白模式说明](dumb_mode/README_DUMB.md) | 5分钟快速上手指南 | 新手用户 |
-| [架构设计文档](docs/architecture.md) | 系统架构详解 | 开发者 |
-| [API接口文档](docs/api_reference.md) | RESTful API说明 | 开发者 |
-| [部署手册](docs/deployment.md) | 生产环境部署指南 | 运维人员 |
-| [开发指南](docs/development.md) | 贡献和开发说明 | 开发者 |
-| [更新日志](CHANGELOG.md) | 版本变更记录 | 所有用户 |
+| [小白模式说明](../dumb_mode/README_DUMB.md) | 5分钟快速上手指南 | 新手用户 |
+| [架构设计文档](architecture.md) | 系统架构详解 | 开发者 |
+| [API接口文档](api_reference.md) | RESTful API说明 | 开发者 |
+| [部署手册](deployment.md) | 生产环境部署指南 | 运维人员 |
+| [开发指南](development.md) | 贡献和开发说明 | 开发者 |
+| [更新日志](../CHANGELOG.md) | 版本变更记录 | 所有用户 |
 
 ## 🤝 贡献指南
 
@@ -376,7 +376,7 @@ python -c "from app.config.settings import settings; print(settings.dict())"
 
 ## 📄 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
+本项目采用 MIT 许可证 - 查看 [LICENSE](../LICENSE) 文件了解详情
 
 ## 🙏 致谢
 

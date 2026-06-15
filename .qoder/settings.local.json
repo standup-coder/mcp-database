@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -d /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/docs/ /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/documentation/ 2>/dev/null && echo \"---docs---\" && ls /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/docs/ && echo \"---documentation---\" && ls /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/documentation/)",
+      "Bash(ls:*)",
+      "Bash(cd /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder && git mv documentation/SECURITY_CHECKLIST.md docs/SECURITY_CHECKLIST.md && git mv documentation/PROJECT_SUMMARY.md docs/PROJECT_SUMMARY.md && git mv documentation/EVALUATION_REPORT.md docs/EVALUATION_REPORT.md && git mv documentation/FIX_SUMMARY.md docs/FIX_SUMMARY.md && git mv documentation/README_PROFESSIONAL.md docs/README_PROFESSIONAL.md && echo \"done\" && ls documentation/)",
+      "Bash(rmdir /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/documentation/ 2>&1 || echo \"not empty - checking...\" && ls /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/documentation/)",
+      "Bash(rm /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/documentation/CHANGELOG.md && rmdir /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/documentation/ && echo \"documentation/ removed\")",
+      "Bash(cd /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder && python -c \"import ast; ast.parse\\(open\\('app/middleware/auth.py'\\).read\\(\\)\\); print\\('auth.py: OK'\\)\" && python -c \"import ast; ast.parse\\(open\\('app/main.py'\\).read\\(\\)\\); print\\('main.py: OK'\\)\" && python -c \"import ast; ast.parse\\(open\\('app/mcp/server_factory.py'\\).read\\(\\)\\); print\\('server_factory.py: OK'\\)\")",
+      "Bash(cd /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder && git status --short)",
+      "Bash(cd /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder && python3 -c \"import ast; ast.parse\\(open\\('app/middleware/auth.py'\\).read\\(\\)\\); print\\('auth.py: OK'\\)\" && python3 -c \"import ast; ast.parse\\(open\\('app/main.py'\\).read\\(\\)\\); print\\('main.py: OK'\\)\" && python3 -c \"import ast; ast.parse\\(open\\('app/mcp/server_factory.py'\\).read\\(\\)\\); print\\('server_factory.py: OK'\\)\")",
+      "Bash(ls /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/documentation/ 2>&1; echo \"---\"; ls /Users/allengaller/Documents/GitHub/standup-coder/mcp4coder/docs/*.md | head -20)",
+      "WebFetch(*)"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ API 认证中间件
 """
 
 import os
+import secrets
 import time
 import hashlib
 import hmac
@@ -20,7 +21,23 @@ from ..utils.logger import get_logger
 logger = get_logger(__name__)
 
 # 配置
-SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your-secret-key-change-in-production")
+_app_env = os.environ.get("APP_ENV", "development")
+_jwt_secret = os.environ.get("JWT_SECRET_KEY")
+
+if _jwt_secret:
+    SECRET_KEY = _jwt_secret
+elif _app_env.lower() == "production":
+    raise RuntimeError(
+        "JWT_SECRET_KEY environment variable is required in production. "
+        "Generate one with: python -c 'import secrets; print(secrets.token_urlsafe(64))'"
+    )
+else:
+    logger.warning(
+        "JWT_SECRET_KEY not set — using ephemeral random key (development only). "
+        "Set JWT_SECRET_KEY in your .env file for persistent tokens."
+    )
+    SECRET_KEY = secrets.token_urlsafe(64)
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

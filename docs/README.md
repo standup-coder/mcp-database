@@ -27,8 +27,8 @@
 
 ### 📋 项目管理
 - [**更新日志**](../CHANGELOG.md) - 版本变更记录
-- [**安全检查清单**](../SECURITY_CHECKLIST.md) - 安全配置检查
-- [**项目总结报告**](../PROJECT_SUMMARY.md) - 项目完整总结
+- [**安全检查清单**](SECURITY_CHECKLIST.md) - 安全配置检查
+- [**项目总结报告**](PROJECT_SUMMARY.md) - 项目完整总结
 
 ## 🎯 根据您的角色选择文档
 
@@ -54,7 +54,7 @@
 1. [部署手册](deployment.md) - 生产环境部署
 2. [监控告警](monitoring.md) - 系统监控配置
 3. [性能优化](performance.md) - 性能调优
-4. [安全检查清单](../SECURITY_CHECKLIST.md) - 安全配置审核
+4. [安全检查清单](SECURITY_CHECKLIST.md) - 安全配置审核
 
 ## 📁 文档结构图
 
@@ -72,6 +72,11 @@ docs/
 ├── monitoring.md                # 监控告警
 ├── troubleshooting.md           # 故障排除
 ├── performance.md               # 性能优化
+├── SECURITY_CHECKLIST.md        # 安全检查清单
+├── PROJECT_SUMMARY.md           # 项目总结报告
+├── EVALUATION_REPORT.md         # 评估报告
+├── FIX_SUMMARY.md               # 修复总结
+├── README_PROFESSIONAL.md       # 专业版README
 └── images/                      # 文档图片资源
     ├── architecture-diagram.png
     ├── workflow-designer.png
