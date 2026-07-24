@@ -31,6 +31,29 @@ MCP 集成后，LLM 可以实时联网搜索：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+BRAVE_API_KEY=BSAxxxxxxxxxxxxxxxx  # API Key
+```
+
+### 可选
+
+```bash
+BRAVE_DEFAULT_COUNT=10  # 结果数
+BRAVE_SAFESEARCH=moderate  # off/moderate/strict
+BRAVE_DEFAULT_COUNTRY=CN  # 结果地域
+BRAVE_DEFAULT_LANG=zh-hans  # 语言
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 API Key
@@ -232,3 +255,14 @@ curl -X POST http://localhost:8000/mcp/execute/brave_search/video_search \
 - [Context7](./Context7.md) - 库文档的权威源
 - [Docfork](./Docfork.md) - 跨库语义搜索
 - [HTTP Client](../后端/HTTP-Client.md) - 也可以直接调其他搜索 API
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [HTTP-Client](技术/后端/HTTP-Client.md)
+- [Docfork](技术/知识库/Docfork.md)
+
+<!-- BACKLINKS END -->

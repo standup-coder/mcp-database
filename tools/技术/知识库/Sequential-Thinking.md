@@ -30,6 +30,23 @@ Sequential Thinking 不是"知识查询"类 MCP，而是**推理辅助**类。�
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 可选
+
+```bash
+SEQUENTIAL_MAX_THOUGHTS=20  # 最大步数
+SEQUENTIAL_ALLOW_BRANCHING=true  # 允许分支
+SEQUENTIAL_ALLOW_REVISION=true  # 允许修订
+SEQUENTIAL_MIN_THOUGHT_LENGTH=50  # 每步最小长度
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 环境变量
@@ -270,3 +287,14 @@ LLM 默认输出是"一次性"的长答案，没有结构。Sequential Thinking 
 - [Context7](./Context7.md) - 推理过程中查库文档
 - [Database](../后端/Database.md) - 故障排查时拉数据
 - [Memory](./Memory.md) - 把推理结论存为知识
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [E2B](技术/测试/E2B.md)
+- [Sentry](技术/测试/Sentry.md)
+
+<!-- BACKLINKS END -->

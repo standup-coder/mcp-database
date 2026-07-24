@@ -27,6 +27,28 @@ Figma MCP 把 Figma 设计文件暴露给 LLM。LLM 可以读取节点的布局�
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+FIGMA_API_KEY=figd_xxxxxxxxxxxxxxxx  # Personal Access Token
+```
+
+### 可选
+
+```bash
+FIGMA_EXPORT_FORMAT=png  # png/svg/jpg/pdf
+FIGMA_EXPORT_SCALE=2  # 1/2/3/4
+FIGMA_DOWNLOAD_DIR=./downloads/figma  # 下载目录
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 Personal Access Token
@@ -245,3 +267,14 @@ LLM 在这一步最有价值：它能"看懂"设计稿的语义，把绝对定�
 - [ReactBits](./ReactBits.md) - 135+ 动画 React 组件，可结合 Figma 配色
 - [Browser](./Browser.md) - 截图工具，验证设计稿实现效果
 - [Notion](../运维/Notion.md) - 把设计 Token 文档化到 Notion
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Browser](技术/前端/Browser.md)
+- [ReactBits](技术/前端/ReactBits.md)
+
+<!-- BACKLINKS END -->

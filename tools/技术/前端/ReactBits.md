@@ -31,6 +31,22 @@ ReactBits MCP 让 LLM 能在对话中**直接搜索、引用、生成**这些组
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 可选
+
+```bash
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxx  # 提升限流（5000/h）
+REACTBITS_DEFAULT_STYLE=tailwind  # tailwind/css
+REACTBITS_INCLUDE_TYPESCRIPT=true  # true/false
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 环境变量
@@ -205,3 +221,13 @@ LLM 在这里主要做"选型 + 适配"：从 135 个组件里挑最合适的，
 - [Figma](./Figma.md) - 拿到设计稿后用 ReactBits 拼组件
 - [Browser](./Browser.md) - 截图验证动效实现效果
 - [Context7](../知识库/Context7.md) - 查 framer-motion 等依赖的精确文档
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Figma](技术/前端/Figma.md)
+
+<!-- BACKLINKS END -->

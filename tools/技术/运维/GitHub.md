@@ -34,6 +34,28 @@ GitHub MCP 把 GitHub API 暴露给 LLM。LLM 可以：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxx  # PAT 或 Fine-grained Token
+```
+
+### 可选
+
+```bash
+GITHUB_HOST=https://github.example.com  # Enterprise
+GITHUB_API_BASE=https://api.github.com  # API base
+GITHUB_DEFAULT_OWNER=my-org  # 默认组织
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 Token
@@ -287,3 +309,19 @@ curl -X POST http://localhost:8000/mcp/execute/github/create_release \
 - [Git](./Git.md) - 本地仓库操作
 - [Linear](./Linear.md) - Issue / Project 同步
 - [Sentry](../测试/Sentry.md) - commit 信息关联 Sentry Issue
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [HTTP-Client](技术/后端/HTTP-Client.md)
+- [Sentry](技术/测试/Sentry.md)
+- [Composio](技术/运维/Composio.md)
+- [Git](技术/运维/Git.md)
+- [Linear](技术/运维/Linear.md)
+- [Notion](技术/运维/Notion.md)
+- [Slack](技术/运维/Slack.md)
+
+<!-- BACKLINKS END -->

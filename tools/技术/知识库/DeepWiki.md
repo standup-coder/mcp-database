@@ -30,6 +30,23 @@ DeepWiki 把公开的 Wiki、文档站、API Reference 转成**结构化 Markdow
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 可选
+
+```bash
+DEEPWIKI_CACHE_DIR=./cache/deepwiki  # 缓存目录
+DEEPWIKI_CACHE_TTL=86400  # 缓存过期秒
+DEEPWIKI_MAX_PAGE_SIZE=2097152  # 2MB
+DEEPWIKI_USER_AGENT=MCP-DeepWiki/1.0  # UA
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 环境变量
@@ -168,3 +185,13 @@ curl -X POST http://localhost:8000/mcp/execute/deepwiki/list_pages \
 - [Docfork](./Docfork.md) - 跨库语义搜索
 - [Memory](./Memory.md) - 把抓取的内容存到知识图谱
 - [Browser](../前端/Browser.md) - JS 渲染页面的备选
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Context7](技术/知识库/Context7.md)
+
+<!-- BACKLINKS END -->

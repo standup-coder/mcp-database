@@ -36,6 +36,29 @@ Sentry 是业界最流行的应用错误监控平台。MCP 集成后，LLM 可�
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+SENTRY_ACCESS_TOKEN=sntrys_xxxxxxxxxxxxxxxx  # Auth Token
+```
+
+### 可选
+
+```bash
+SENTRY_HOST=sentry.io  # 自托管时改
+SENTRY_DEFAULT_PROJECT=my-app  # 默认项目
+SENTRY_SELF_HOSTED=false  # true/false
+SENTRY_SCHEME=https  # https/http
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 Auth Token
@@ -306,3 +329,18 @@ curl -X POST http://localhost:8000/mcp/execute/sentry/transaction_stats \
 - [Linear](../运维/Linear.md) - 自动建工单跟踪
 - [钉钉](../../行业/即时通讯/钉钉.md) - 实时推送新 Issue
 - [Sequential Thinking](../知识库/Sequential-Thinking.md) - 故障排查推理
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Browser](技术/前端/Browser.md)
+- [Database](技术/后端/Database.md)
+- [Git](技术/运维/Git.md)
+- [GitHub](技术/运维/GitHub.md)
+- [Linear](技术/运维/Linear.md)
+- [Slack](技术/运维/Slack.md)
+
+<!-- BACKLINKS END -->

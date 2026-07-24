@@ -27,6 +27,21 @@ Context7 收录 9000+ 流行库（React、Vue、Django、FastAPI、Next.js 等�
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 可选
+
+```bash
+CONTEXT7_API_KEY=ctx7_xxxxxxxx  # 无 Key 也能用（限流）
+CONTEXT7_MAX_SNIPPETS=5  # 单次返回片段数
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 API Key
@@ -198,3 +213,18 @@ curl -X POST http://localhost:8000/mcp/execute/context7/query_docs \
 - [Docfork](./Docfork.md) - 跨库语义搜索
 - [DeepWiki](./DeepWiki.md) - Wiki 类文档转换
 - [Memory](./Memory.md) - 自己项目内的知识图谱
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [ReactBits](技术/前端/ReactBits.md)
+- [Brave-Search](技术/知识库/Brave-Search.md)
+- [DeepWiki](技术/知识库/DeepWiki.md)
+- [Docfork](技术/知识库/Docfork.md)
+- [Memory](技术/知识库/Memory.md)
+- [Sequential-Thinking](技术/知识库/Sequential-Thinking.md)
+
+<!-- BACKLINKS END -->

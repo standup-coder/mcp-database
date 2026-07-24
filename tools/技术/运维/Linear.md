@@ -37,6 +37,27 @@ MCP 集成后，LLM 可以：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+LINEAR_API_KEY=lin_api_xxxxxxxxxxxxxxxx  # Personal API Key
+```
+
+### 可选
+
+```bash
+LINEAR_DEFAULT_TEAM=Engineering  # 默认团队
+LINEAR_DEFAULT_ASSIGNEE=alice@company.com  # 默认 assignee
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 API Key
@@ -254,3 +275,19 @@ curl -X POST http://localhost:8000/mcp/execute/linear/add_comment \
 - [Sentry](../测试/Sentry.md) - 错误自动建单
 - [Notion](./Notion.md) - 文档 / 知识库
 - [Slack](./Slack.md) - 状态变更通知
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Sentry](技术/测试/Sentry.md)
+- [Memory](技术/知识库/Memory.md)
+- [Composio](技术/运维/Composio.md)
+- [GitHub](技术/运维/GitHub.md)
+- [Google-Sheets](技术/运维/Google-Sheets.md)
+- [Notion](技术/运维/Notion.md)
+- [Slack](技术/运维/Slack.md)
+
+<!-- BACKLINKS END -->

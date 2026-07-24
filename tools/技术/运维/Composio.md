@@ -35,6 +35,27 @@ Composio 是**应用集成平台**，统一封装了 500+ 流行 SaaS：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+COMPOSIO_API_KEY=ck_xxxxxxxxxxxxxxxx  # API Key
+```
+
+### 可选
+
+```bash
+COMPOSIO_DEFAULT_ENTITY_ID=default  # 默认 Entity
+COMPOSIO_ENABLE_TRIGGERS=true  # 启用 Trigger
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 API Key

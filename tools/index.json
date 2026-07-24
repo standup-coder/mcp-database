@@ -1,0 +1,608 @@
+{
+  "version": "1.0.0",
+  "generated_by": "scripts/build_index.py",
+  "source": ".env.quick.json",
+  "total": 26,
+  "categories": {
+    "技术-前端": {
+      "count": 3,
+      "mcps": [
+        "Browser.md",
+        "Figma.md",
+        "ReactBits.md"
+      ]
+    },
+    "技术-后端": {
+      "count": 3,
+      "mcps": [
+        "Database.md",
+        "Desktop-Commander.md",
+        "HTTP-Client.md"
+      ]
+    },
+    "技术-测试": {
+      "count": 2,
+      "mcps": [
+        "E2B.md",
+        "Sentry.md"
+      ]
+    },
+    "技术-知识库": {
+      "count": 6,
+      "mcps": [
+        "Brave-Search.md",
+        "Context7.md",
+        "DeepWiki.md",
+        "Docfork.md",
+        "Memory.md",
+        "Sequential-Thinking.md"
+      ]
+    },
+    "技术-运维": {
+      "count": 8,
+      "mcps": [
+        "Composio.md",
+        "Filesystem.md",
+        "Git.md",
+        "GitHub.md",
+        "Google-Sheets.md",
+        "Linear.md",
+        "Notion.md",
+        "Slack.md"
+      ]
+    },
+    "行业-即时通讯": {
+      "count": 1,
+      "mcps": [
+        "钉钉.md"
+      ]
+    },
+    "行业-地图导航": {
+      "count": 1,
+      "mcps": [
+        "高德地图.md"
+      ]
+    },
+    "行业-天气": {
+      "count": 1,
+      "mcps": [
+        "天气.md"
+      ]
+    },
+    "行业-日程管理": {
+      "count": 1,
+      "mcps": [
+        "日历.md"
+      ]
+    }
+  },
+  "mcps": [
+    {
+      "id": "行业/地图导航/高德地图",
+      "name": "高德地图",
+      "category": "行业-地图导航",
+      "tags": [
+        "导航",
+        "路线",
+        "通勤",
+        "地理位置"
+      ],
+      "path": "行业/地图导航/高德地图",
+      "url": "行业/地图导航/高德地图.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 4,
+      "required_env_keys": [
+        "AMAP_API_KEY"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "行业/即时通讯/钉钉",
+      "name": "钉钉",
+      "category": "行业-即时通讯",
+      "tags": [
+        "通知",
+        "群消息",
+        "告警",
+        "国内"
+      ],
+      "path": "行业/即时通讯/钉钉",
+      "url": "行业/即时通讯/钉钉.md",
+      "required_env_count": 1,
+      "strong_env_count": 1,
+      "optional_env_count": 1,
+      "total_env_count": 3,
+      "required_env_keys": [
+        "DINGTALK_WEBHOOK_URL"
+      ],
+      "strong_env_keys": [
+        "DINGTALK_SECRET"
+      ]
+    },
+    {
+      "id": "行业/天气/天气",
+      "name": "天气",
+      "category": "行业-天气",
+      "tags": [
+        "实时",
+        "预报",
+        "指数"
+      ],
+      "path": "行业/天气/天气",
+      "url": "行业/天气/天气.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 4,
+      "required_env_keys": [
+        "WEATHER_API_KEY"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "行业/日程管理/日历",
+      "name": "日历",
+      "category": "行业-日程管理",
+      "tags": [
+        "会议",
+        "日程",
+        "Google",
+        "Outlook"
+      ],
+      "path": "行业/日程管理/日历",
+      "url": "行业/日程管理/日历.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 5,
+      "total_env_count": 5,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/前端/Figma",
+      "name": "Figma",
+      "category": "技术-前端",
+      "tags": [
+        "设计",
+        "UI",
+        "协作"
+      ],
+      "path": "技术/前端/Figma",
+      "url": "技术/前端/Figma.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 4,
+      "required_env_keys": [
+        "FIGMA_API_KEY"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/前端/ReactBits",
+      "name": "ReactBits",
+      "category": "技术-前端",
+      "tags": [
+        "组件库",
+        "动画",
+        "React"
+      ],
+      "path": "技术/前端/ReactBits",
+      "url": "技术/前端/ReactBits.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 3,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/前端/Browser",
+      "name": "Browser",
+      "category": "技术-前端",
+      "tags": [
+        "Playwright",
+        "截图",
+        "爬虫",
+        "E2E"
+      ],
+      "path": "技术/前端/Browser",
+      "url": "技术/前端/Browser.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 8,
+      "total_env_count": 8,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/后端/Database",
+      "name": "Database",
+      "category": "技术-后端",
+      "tags": [
+        "SQL",
+        "MySQL",
+        "PostgreSQL",
+        "Redis",
+        "只读"
+      ],
+      "path": "技术/后端/Database",
+      "url": "技术/后端/Database.md",
+      "required_env_count": 0,
+      "strong_env_count": 4,
+      "optional_env_count": 6,
+      "total_env_count": 10,
+      "required_env_keys": [],
+      "strong_env_keys": [
+        "DB_BLOCKED_KEYWORDS",
+        "DB_MAX_ROWS",
+        "DB_QUERY_TIMEOUT",
+        "DB_ALLOW_WRITE"
+      ]
+    },
+    {
+      "id": "技术/后端/HTTP-Client",
+      "name": "HTTP-Client",
+      "category": "技术-后端",
+      "tags": [
+        "API",
+        "REST",
+        "SSRF防护"
+      ],
+      "path": "技术/后端/HTTP-Client",
+      "url": "技术/后端/HTTP-Client.md",
+      "required_env_count": 0,
+      "strong_env_count": 2,
+      "optional_env_count": 6,
+      "total_env_count": 8,
+      "required_env_keys": [],
+      "strong_env_keys": [
+        "HTTP_ALLOWED_HOSTS",
+        "HTTP_BLOCKED_IPS"
+      ]
+    },
+    {
+      "id": "技术/后端/Desktop-Commander",
+      "name": "Desktop-Commander",
+      "category": "技术-后端",
+      "tags": [
+        "Shell",
+        "进程",
+        "终端",
+        "高权限"
+      ],
+      "path": "技术/后端/Desktop-Commander",
+      "url": "技术/后端/Desktop-Commander.md",
+      "required_env_count": 3,
+      "strong_env_count": 0,
+      "optional_env_count": 6,
+      "total_env_count": 9,
+      "required_env_keys": [
+        "DESKTOP_BASE_PATH",
+        "DESKTOP_BLOCKED_PATHS",
+        "DESKTOP_BLOCKED_COMMANDS"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/知识库/Context7",
+      "name": "Context7",
+      "category": "技术-知识库",
+      "tags": [
+        "库文档",
+        "版本精确",
+        "RAG"
+      ],
+      "path": "技术/知识库/Context7",
+      "url": "技术/知识库/Context7.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 2,
+      "total_env_count": 2,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/知识库/Docfork",
+      "name": "Docfork",
+      "category": "技术-知识库",
+      "tags": [
+        "语义搜索",
+        "跨库"
+      ],
+      "path": "技术/知识库/Docfork",
+      "url": "技术/知识库/Docfork.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 2,
+      "total_env_count": 3,
+      "required_env_keys": [
+        "DOCFORK_API_KEY"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/知识库/DeepWiki",
+      "name": "DeepWiki",
+      "category": "技术-知识库",
+      "tags": [
+        "Wiki",
+        "Markdown",
+        "抓取"
+      ],
+      "path": "技术/知识库/DeepWiki",
+      "url": "技术/知识库/DeepWiki.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 4,
+      "total_env_count": 4,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/知识库/Memory",
+      "name": "Memory",
+      "category": "技术-知识库",
+      "tags": [
+        "知识图谱",
+        "实体",
+        "持久化"
+      ],
+      "path": "技术/知识库/Memory",
+      "url": "技术/知识库/Memory.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 12,
+      "total_env_count": 12,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/知识库/Sequential-Thinking",
+      "name": "Sequential-Thinking",
+      "category": "技术-知识库",
+      "tags": [
+        "推理",
+        "思维链",
+        "CoT"
+      ],
+      "path": "技术/知识库/Sequential-Thinking",
+      "url": "技术/知识库/Sequential-Thinking.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 4,
+      "total_env_count": 4,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/知识库/Brave-Search",
+      "name": "Brave-Search",
+      "category": "技术-知识库",
+      "tags": [
+        "搜索",
+        "新闻",
+        "隐私"
+      ],
+      "path": "技术/知识库/Brave-Search",
+      "url": "技术/知识库/Brave-Search.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 4,
+      "total_env_count": 5,
+      "required_env_keys": [
+        "BRAVE_API_KEY"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/测试/E2B",
+      "name": "E2B",
+      "category": "技术-测试",
+      "tags": [
+        "沙箱",
+        "代码执行",
+        "Python",
+        "JavaScript"
+      ],
+      "path": "技术/测试/E2B",
+      "url": "技术/测试/E2B.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 4,
+      "required_env_keys": [
+        "E2B_API_KEY"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/测试/Sentry",
+      "name": "Sentry",
+      "category": "技术-测试",
+      "tags": [
+        "错误监控",
+        "Issue",
+        "APM"
+      ],
+      "path": "技术/测试/Sentry",
+      "url": "技术/测试/Sentry.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 4,
+      "total_env_count": 5,
+      "required_env_keys": [
+        "SENTRY_ACCESS_TOKEN"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/运维/Filesystem",
+      "name": "Filesystem",
+      "category": "技术-运维",
+      "tags": [
+        "文件",
+        "安全",
+        "受限"
+      ],
+      "path": "技术/运维/Filesystem",
+      "url": "技术/运维/Filesystem.md",
+      "required_env_count": 3,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 6,
+      "required_env_keys": [
+        "FILESYSTEM_BASE_PATH",
+        "FILESYSTEM_BLOCKED_PATHS",
+        "FILESYSTEM_BLOCKED_EXTENSIONS"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/运维/Git",
+      "name": "Git",
+      "category": "技术-运维",
+      "tags": [
+        "版本控制",
+        "分支",
+        "提交"
+      ],
+      "path": "技术/运维/Git",
+      "url": "技术/运维/Git.md",
+      "required_env_count": 3,
+      "strong_env_count": 2,
+      "optional_env_count": 2,
+      "total_env_count": 7,
+      "required_env_keys": [
+        "GIT_BASE_PATH",
+        "GIT_ALLOWED_REMOTES",
+        "GIT_PROTECTED_BRANCHES"
+      ],
+      "strong_env_keys": [
+        "GIT_ALLOW_FORCE_PUSH",
+        "GIT_ALLOW_HARD_RESET"
+      ]
+    },
+    {
+      "id": "技术/运维/GitHub",
+      "name": "GitHub",
+      "category": "技术-运维",
+      "tags": [
+        "仓库",
+        "PR",
+        "Issue",
+        "Actions"
+      ],
+      "path": "技术/运维/GitHub",
+      "url": "技术/运维/GitHub.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 4,
+      "required_env_keys": [
+        "GITHUB_TOKEN"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/运维/Slack",
+      "name": "Slack",
+      "category": "技术-运维",
+      "tags": [
+        "消息",
+        "BlockKit",
+        "海外"
+      ],
+      "path": "技术/运维/Slack",
+      "url": "技术/运维/Slack.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 3,
+      "total_env_count": 4,
+      "required_env_keys": [
+        "SLACK_BOT_TOKEN"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/运维/Notion",
+      "name": "Notion",
+      "category": "技术-运维",
+      "tags": [
+        "文档",
+        "Database",
+        "协作"
+      ],
+      "path": "技术/运维/Notion",
+      "url": "技术/运维/Notion.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 2,
+      "total_env_count": 3,
+      "required_env_keys": [
+        "NOTION_TOKEN"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/运维/Linear",
+      "name": "Linear",
+      "category": "技术-运维",
+      "tags": [
+        "Issue",
+        "敏捷",
+        "Sprint"
+      ],
+      "path": "技术/运维/Linear",
+      "url": "技术/运维/Linear.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 2,
+      "total_env_count": 3,
+      "required_env_keys": [
+        "LINEAR_API_KEY"
+      ],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/运维/Google-Sheets",
+      "name": "Google-Sheets",
+      "category": "技术-运维",
+      "tags": [
+        "表格",
+        "数据",
+        "协作"
+      ],
+      "path": "技术/运维/Google-Sheets",
+      "url": "技术/运维/Google-Sheets.md",
+      "required_env_count": 0,
+      "strong_env_count": 0,
+      "optional_env_count": 4,
+      "total_env_count": 4,
+      "required_env_keys": [],
+      "strong_env_keys": []
+    },
+    {
+      "id": "技术/运维/Composio",
+      "name": "Composio",
+      "category": "技术-运维",
+      "tags": [
+        "集成平台",
+        "500+应用",
+        "统一"
+      ],
+      "path": "技术/运维/Composio",
+      "url": "技术/运维/Composio.md",
+      "required_env_count": 1,
+      "strong_env_count": 0,
+      "optional_env_count": 2,
+      "total_env_count": 3,
+      "required_env_keys": [
+        "COMPOSIO_API_KEY"
+      ],
+      "strong_env_keys": []
+    }
+  ]
+}

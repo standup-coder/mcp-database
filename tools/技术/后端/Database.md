@@ -34,6 +34,34 @@ Database MCP 给 LLM 提供了**只读 + 受限**的数据库访问能力。LLM 
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 强烈建议（生产环境）
+
+```bash
+DB_BLOCKED_KEYWORDS=DROP,DELETE,UPDATE,INSERT,TRUNCATE,ALTER,RENAME,GRANT,REVOKE  # 危险关键字拦截
+DB_MAX_ROWS=1000  # 单次返回行数上限
+DB_QUERY_TIMEOUT=30  # 查询超时秒
+DB_ALLOW_WRITE=false  # 生产必须 false
+```
+
+### 可选
+
+```bash
+DB_PRIMARY_TYPE=mysql  # mysql/postgresql/sqlite/redis
+DB_PRIMARY_HOST=127.0.0.1  # 主机
+DB_PRIMARY_PORT=3306  # 端口
+DB_PRIMARY_USER=readonly  # 强烈建议只读账号
+DB_PRIMARY_PASSWORD=your_password  # 数据库密码
+DB_PRIMARY_DATABASE=mydb  # 数据库名
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 环境变量（MySQL 示例）
@@ -241,3 +269,16 @@ curl -X POST http://localhost:8000/mcp/execute/database/redis_keys \
 - [HTTP Client](./HTTP-Client.md) - 通过 API 访问数据库托管平台（RDS / Cloud SQL）
 - [Sentry](../测试/Sentry.md) - 慢查询可能是线上故障的征兆
 - [E2B](../测试/E2B.md) - 跑数据分析脚本，避免在生产库跑大查询
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [HTTP-Client](技术/后端/HTTP-Client.md)
+- [E2B](技术/测试/E2B.md)
+- [Sequential-Thinking](技术/知识库/Sequential-Thinking.md)
+- [Google-Sheets](技术/运维/Google-Sheets.md)
+
+<!-- BACKLINKS END -->

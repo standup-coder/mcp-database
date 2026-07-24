@@ -35,6 +35,31 @@ Memory MCP 提供**持久化 + 知识图谱**能力。LLM 可以：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 可选
+
+```bash
+MEMORY_BACKEND=sqlite  # sqlite/postgresql/neo4j/redis
+MEMORY_DB_PATH=./data/memory.db  # SQLite 路径
+MEMORY_PG_HOST=localhost  # PostgreSQL
+MEMORY_PG_PORT=5432
+MEMORY_PG_DB=memory
+MEMORY_PG_USER=memory_user
+MEMORY_PG_PASSWORD=xxx
+MEMORY_NEO4J_URI=bolt://localhost:7687  # Neo4j
+MEMORY_NEO4J_USER=neo4j
+MEMORY_NEO4J_PASSWORD=xxx
+MEMORY_MAX_NODES=100000  # 节点上限
+MEMORY_MAX_DEPTH=5  # 图遍历深度
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 存储后端
@@ -277,3 +302,17 @@ curl -X POST http://localhost:8000/mcp/execute/memory/restore \
 - [Notion](../运维/Notion.md) - 人类可读的项目文档
 - [Linear](../运维/Linear.md) - 任务 / Issue 结构化记录
 - [Context7](./Context7.md) - 库文档可以存为 Memory 里的实体
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Context7](技术/知识库/Context7.md)
+- [DeepWiki](技术/知识库/DeepWiki.md)
+- [Docfork](技术/知识库/Docfork.md)
+- [Sequential-Thinking](技术/知识库/Sequential-Thinking.md)
+- [Notion](技术/运维/Notion.md)
+
+<!-- BACKLINKS END -->

@@ -38,6 +38,27 @@ Browser MCP 把 Playwright 包装成 LLM 可调用的工具。LLM 可以驱动�
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 可选
+
+```bash
+BROWSER_DEFAULT_ENGINE=chromium  # chromium/firefox/webkit
+BROWSER_HEADLESS=true  # 生产必须 true
+BROWSER_DEFAULT_TIMEOUT=30000  # 毫秒
+BROWSER_VIEWPORT_WIDTH=1920  # 视口宽
+BROWSER_VIEWPORT_HEIGHT=1080  # 视口高
+BROWSER_SCREENSHOT_DIR=./downloads/screenshots  # 截图目录
+BROWSER_PROXY=http://proxy:8080  # 代理（企业内网）
+BROWSER_USER_AGENT=Mozilla/5.0 ...  # 反爬 UA
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 安装依赖
@@ -230,3 +251,16 @@ curl -X POST http://localhost:8000/mcp/execute/browser/pdf \
 - [E2B](../测试/E2B.md) - 把抓到的数据丢到 E2B 沙箱里分析
 - [Figma](./Figma.md) - 设计稿 vs 实现的视觉对比
 - [Sentry](../测试/Sentry.md) - 抓取生产页面报错截图
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Figma](技术/前端/Figma.md)
+- [ReactBits](技术/前端/ReactBits.md)
+- [E2B](技术/测试/E2B.md)
+- [DeepWiki](技术/知识库/DeepWiki.md)
+
+<!-- BACKLINKS END -->

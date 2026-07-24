@@ -36,6 +36,36 @@ Git MCP 把 Git 命令包装成 LLM 可调用的工具。LLM 可以：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+GIT_BASE_PATH=/Users/yourname/projects  # 仓库根目录
+GIT_ALLOWED_REMOTES=origin,upstream  # 允许的远程
+GIT_PROTECTED_BRANCHES=main,master,develop  # 保护分支
+```
+
+### 强烈建议（生产环境）
+
+```bash
+GIT_ALLOW_FORCE_PUSH=false  # 禁止 force push
+GIT_ALLOW_HARD_RESET=false  # 禁止 hard reset
+```
+
+### 可选
+
+```bash
+GIT_USER_NAME=MCP Bot  # 提交用户名
+GIT_USER_EMAIL=mcp@company.com  # 提交邮箱
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 路径白名单
@@ -265,3 +295,15 @@ curl -X POST http://localhost:8000/mcp/execute/git/push \
 - [GitHub](./GitHub.md) - 上游：PR / Issue / Review
 - [Filesystem](./Filesystem.md) - 改文件
 - [Sentry](../测试/Sentry.md) - commit 信息可以关联 Sentry Issue
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Desktop-Commander](技术/后端/Desktop-Commander.md)
+- [Filesystem](技术/运维/Filesystem.md)
+- [GitHub](技术/运维/GitHub.md)
+
+<!-- BACKLINKS END -->

@@ -35,6 +35,27 @@ Notion MCP 把 Notion API 暴露给 LLM。LLM 可以：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+NOTION_TOKEN=secret_xxxxxxxxxxxxxxxx  # Internal Integration Token
+```
+
+### 可选
+
+```bash
+NOTION_API_VERSION=2022-06-28  # API 版本
+NOTION_DEFAULT_PARENT_PAGE_ID=xxx  # 默认父页面
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 创建 Integration
@@ -296,3 +317,17 @@ curl -X POST http://localhost:8000/mcp/execute/notion/create_database_row \
 - [Linear](./Linear.md) - 任务管理替代
 - [Google Sheets](./Google-Sheets.md) - 结构化数据补充
 - [Memory](../知识库/Memory.md) - 把 Notion 知识存到图谱
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Figma](技术/前端/Figma.md)
+- [Memory](技术/知识库/Memory.md)
+- [Composio](技术/运维/Composio.md)
+- [Google-Sheets](技术/运维/Google-Sheets.md)
+- [Linear](技术/运维/Linear.md)
+
+<!-- BACKLINKS END -->

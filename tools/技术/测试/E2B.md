@@ -34,6 +34,28 @@ E2B 提供**云端隔离沙箱**，让 LLM 可以安全地执行任意 Python / 
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+E2B_API_KEY=e2b_xxxxxxxxxxxxxxxx  # API Key
+```
+
+### 可选
+
+```bash
+E2B_DEFAULT_TEMPLATE=base  # 默认模板
+E2B_DEFAULT_TIMEOUT=300  # 秒
+E2B_MAX_LIFETIME=86400  # 沙箱最大存活秒
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 API Key
@@ -271,3 +293,16 @@ E2B **隔离性最强 + 0 维护**，适合不可信代码；本地执行**最�
 - [Database](../后端/Database.md) - 也可以用 SQL 做数据分析
 - [Browser](../前端/Browser.md) - JS 渲染抓取
 - [Sequential Thinking](../知识库/Sequential-Thinking.md) - 多步分析任务编排
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Browser](技术/前端/Browser.md)
+- [Database](技术/后端/Database.md)
+- [Filesystem](技术/运维/Filesystem.md)
+- [Google-Sheets](技术/运维/Google-Sheets.md)
+
+<!-- BACKLINKS END -->

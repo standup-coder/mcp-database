@@ -30,6 +30,27 @@ Docfork 收录 9000+ 库，提供**语义搜索**能力。跟 Context7 的区别
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+DOCFORK_API_KEY=doc_xxxxxxxxxxxxxxxx  # API Key
+```
+
+### 可选
+
+```bash
+DOCFORK_MAX_RESULTS=10  # 结果数
+DOCFORK_INCLUDE_CODE=true  # 包含代码片段
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请 API Key
@@ -172,3 +193,15 @@ curl -X POST http://localhost:8000/mcp/execute/docfork/compare \
 - [Context7](./Context7.md) - 库 ID 已知时的精确文档
 - [Brave Search](./Brave-Search.md) - 找最新博客 / 教程
 - [Memory](./Memory.md) - 团队内部知识库
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Brave-Search](技术/知识库/Brave-Search.md)
+- [Context7](技术/知识库/Context7.md)
+- [DeepWiki](技术/知识库/DeepWiki.md)
+
+<!-- BACKLINKS END -->

@@ -35,6 +35,28 @@ Slack MCP 把 Slack API 暴露给 LLM。LLM 可以：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+SLACK_BOT_TOKEN=xoxb-xxxxxxxxxxxxxxxx  # Bot User OAuth Token
+```
+
+### 可选
+
+```bash
+SLACK_SIGNING_SECRET=your_signing_secret  # 事件订阅需
+SLACK_DEFAULT_CHANNEL=#general  # 默认频道
+SLACK_API_BASE=https://slack.com/api  # 自托管改
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 创建 Slack App
@@ -306,3 +328,14 @@ Block Kit 是 Slack 的富文本格式，常见块：
 - [Sentry](../测试/Sentry.md) - 错误告警
 - [Linear](./Linear.md) - Issue 状态变更通知
 - [钉钉](../../行业/即时通讯/钉钉.md) - 国内场景替代
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Composio](技术/运维/Composio.md)
+- [Linear](技术/运维/Linear.md)
+
+<!-- BACKLINKS END -->

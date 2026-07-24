@@ -10,7 +10,14 @@
 ```
 tools/
 ├── README.md                 ← 你正在看
-├── .env.example              ← 全部 26 个 MCP 的环境变量总模板
+├── .env.example              ← 26 个 MCP 的环境变量总模板
+├── .env.quick.json           ← 结构化环境变量数据（脚本消费）
+├── index.json                ← 结构化索引（IDE/文档站消费）
+│
+├── scripts/                  ← 维护脚本
+│   ├── inject_quick_config.py    注入"快速配置"区块
+│   ├── build_backlinks.py        生成反向链接
+│   └── build_index.py            重建 index.json
 │
 ├── 行业/                     ← 按行业场景分
 │   ├── 地图导航/
@@ -162,13 +169,56 @@ cp tools/.env.example .env
 
 1. **简介** —— 是什么、为什么用
 2. **核心能力** —— 能做什么（表格）
-3. **配置** —— 环境变量、API Key 申请流程
-4. **使用示例** —— curl 调用样例
-5. **典型使用流程** —— **ASCII 流程图**，直观展示场景
-6. **注意事项** —— 安全 / 限流 / 坑
-7. **相关工具** —— 跟谁配合
+3. **快速配置** —— 可直接复制粘贴的环境变量片段（按 REQUIRED / STRONG / 可选 分组）
+4. **配置** —— 详细环境变量、API Key 申请流程
+5. **使用示例** —— curl 调用样例
+6. **典型使用流程** —— **ASCII 流程图**，直观展示场景
+7. **注意事项** —— 安全 / 限流 / 坑
+8. **相关工具** —— 跟谁配合
+9. **🔗 被以下 MCP 引用** —— 自动生成的反向链接（由脚本维护）
 
 **读一个文件 5 分钟，跑通一个 30 分钟。**
+
+---
+
+## 📦 配套资产
+
+| 文件 | 用途 |
+|------|------|
+| [`.env.example`](./.env.example) | 全部 26 个 MCP 的环境变量总模板（10.7KB，10 个分类） |
+| [`.env.quick.json`](./.env.quick.json) | 结构化的环境变量数据（被脚本消费） |
+| [`index.json`](./index.json) | 结构化索引：分类、tags、env 数量、必填 Key（供 IDE / 文档站消费） |
+| [`scripts/inject_quick_config.py`](./scripts/inject_quick_config.py) | 给每个 MCP 文档插入"快速配置"区块 |
+| [`scripts/build_backlinks.py`](./scripts/build_backlinks.py) | 扫描相关工具链接，生成反向链接区块 |
+| [`scripts/build_index.py`](./scripts/build_index.py) | 从 `.env.quick.json` 生成 `index.json` |
+
+### 脚本用法
+
+```bash
+# 给所有 MCP 文档注入"快速配置"区块（基于 .env.quick.json）
+python3 scripts/inject_quick_config.py
+
+# 构建反向链接（先 dry-run 看一下统计）
+python3 scripts/build_backlinks.py --stats
+python3 scripts/build_backlinks.py
+
+# 重新生成 index.json
+python3 scripts/build_index.py
+```
+
+### index.json 示例
+
+```json
+{
+  "id": "行业/地图导航/高德地图",
+  "name": "高德地图",
+  "category": "行业-地图导航",
+  "tags": ["导航", "路线", "通勤", "地理位置"],
+  "required_env_count": 1,
+  "strong_env_count": 0,
+  "required_env_keys": ["AMAP_API_KEY"]
+}
+```
 
 ---
 
@@ -176,10 +226,12 @@ cp tools/.env.example .env
 
 - 新增 MCP：在 `行业/` 或 `技术/<角色>/` 下新建 `<MCP名称>.md`
 - 修改：直接编辑对应 Markdown
-- 索引：更新本 README
-- 新增环境变量：同步更新 `.env.example`
+- 索引：更新本 README + 跑 `scripts/build_index.py`
+- 新增环境变量：同步更新 `.env.example` 和 `.env.quick.json`，然后跑 `inject_quick_config.py`
+- 新增"相关工具"链接：跑 `build_backlinks.py` 自动生成反向链接
 - 格式：参照已有文件，保持一致
 - **每个文档必须包含 ASCII 流程图**
+- **每个文档必须包含"快速配置"区块**
 
 ---
 

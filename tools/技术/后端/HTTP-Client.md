@@ -28,6 +28,32 @@ LLM 可以构造任意请求（GET / POST / PUT / DELETE / PATCH），带 Header
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 强烈建议（生产环境）
+
+```bash
+HTTP_ALLOWED_HOSTS=api.github.com,api.openai.com,*.amap.com,oapi.dingtalk.com  # 域名白名单（防 SSRF）
+HTTP_BLOCKED_IPS=127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16  # 内网段拦截
+```
+
+### 可选
+
+```bash
+HTTP_DEFAULT_TIMEOUT=30  # 秒
+HTTP_MAX_RESPONSE_SIZE=10485760  # 10MB
+HTTP_USER_AGENT=MCP-HTTP-Client/1.0  # UA
+HTTP_FOLLOW_REDIRECTS=true
+HTTP_MAX_REDIRECTS=5
+HTTP_VERIFY_SSL=true
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 全局配置
@@ -246,3 +272,14 @@ curl -X POST http://localhost:8000/mcp/execute/http_client/request \
 - [GitHub](../运维/GitHub.md) - 调 GitHub API 也可以直接用这个
 - [Database](./Database.md) - 多数 SaaS 平台有 HTTP API 可替代直接连库
 - [Brave Search](../知识库/Brave-Search.md) - 公开网页数据也可以走 HTTP Client
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Database](技术/后端/Database.md)
+- [Brave-Search](技术/知识库/Brave-Search.md)
+
+<!-- BACKLINKS END -->

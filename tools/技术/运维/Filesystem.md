@@ -31,6 +31,30 @@ Filesystem 更安全（没有 shell 注入风险），适合纯文件场景。
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+FILESYSTEM_BASE_PATH=/Users/yourname/projects  # 根目录
+FILESYSTEM_BLOCKED_PATHS=/etc,/usr,/var,/root,/System,/boot,.ssh,.aws  # 禁止路径
+FILESYSTEM_BLOCKED_EXTENSIONS=.env,.key,.pem,.pfx,.p12,.cer  # 禁止后缀
+```
+
+### 可选
+
+```bash
+FILESYSTEM_MAX_FILE_SIZE=10485760  # 10MB
+FILESYSTEM_MAX_LIST_DEPTH=10
+FILESYSTEM_MAX_SEARCH_RESULTS=1000
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 路径白名单（必须）
@@ -246,3 +270,14 @@ curl -X POST http://localhost:8000/mcp/execute/filesystem/batch_rename \
 - [Desktop Commander](../后端/Desktop-Commander.md) - 升级版（带 shell）
 - [Git](./Git.md) - 文件改动后自动 commit
 - [E2B](../测试/E2B.md) - 临时文件可以丢到沙箱
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Desktop-Commander](技术/后端/Desktop-Commander.md)
+- [Git](技术/运维/Git.md)
+
+<!-- BACKLINKS END -->

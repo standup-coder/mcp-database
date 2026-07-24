@@ -34,6 +34,23 @@ Google Sheets MCP 把 Google Sheets API 暴露给 LLM。LLM 可以：
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 可选
+
+```bash
+GOOGLE_CREDENTIALS_PATH=./credentials.json  # OAuth 凭据
+GOOGLE_TOKEN_PATH=./token.json  # Token 缓存
+GOOGLE_SERVICE_ACCOUNT_JSON={"type": "service_account", ...}  # Service Account（机器人推荐）
+GOOGLE_DEFAULT_SHEET_ID=1BxiMVs0XRA...  # 默认表格
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 申请凭据
@@ -290,3 +307,13 @@ curl -X POST http://localhost:8000/mcp/execute/google_sheets/write_formula \
 - [Linear](./Linear.md) - 任务管理
 - [Database](../后端/Database.md) - 数据源
 - [E2B](../测试/E2B.md) - 数据预处理
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Notion](技术/运维/Notion.md)
+
+<!-- BACKLINKS END -->

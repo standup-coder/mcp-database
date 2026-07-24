@@ -35,6 +35,33 @@ Desktop Commander 把**本地 shell**暴露给 LLM。LLM 可以执行任意命�
 
 ---
 
+## 快速配置
+
+> 直接复制以下片段到 `.env`，再补全你的 Key。完整模板见 [`.env.example`](.env.example)。
+>
+> 图例：`[REQUIRED]` 必填 · `[STRONG]` 强烈建议 · 其他可选
+
+### 必填
+
+```bash
+DESKTOP_BASE_PATH=/Users/yourname/projects  # 限制操作目录（必填）
+DESKTOP_BLOCKED_PATHS=/etc,/usr,/var,/root,/System,/boot  # 禁止路径
+DESKTOP_BLOCKED_COMMANDS=rm -rf /,dd,mkfs,fdisk,shutdown,reboot,halt,poweroff,init  # 禁止命令
+```
+
+### 可选
+
+```bash
+DESKTOP_DEFAULT_TIMEOUT=60  # 秒
+DESKTOP_MAX_MEMORY=2048  # MB
+DESKTOP_MAX_OUTPUT_SIZE=1048576  # 1MB
+DESKTOP_ALLOW_BACKGROUND=true  # 是否允许后台进程
+DESKTOP_AUDIT_LOG=./logs/desktop_commander.log  # 审计日志
+DESKTOP_AUDIT_RETENTION_DAYS=90  # 日志保留天数
+```
+
+---
+
 ## 三、配置
 
 ### 3.1 路径白名单（必须）
@@ -292,3 +319,13 @@ curl -X POST http://localhost:8000/mcp/execute/desktop_commander/search_content 
 - [Filesystem](../运维/Filesystem.md) - 纯文件操作（无 shell）
 - [Git](../运维/Git.md) - Git 命令更安全的封装
 - [Docker](../运维/Docker.md)（可借 Desktop Commander 调） - 容器化部署
+
+<!-- BACKLINKS START -->
+
+## 🔗 被以下 MCP 引用
+
+> 反向链接自动生成（`scripts/build_backlinks.py`）。
+
+- [Filesystem](技术/运维/Filesystem.md)
+
+<!-- BACKLINKS END -->
