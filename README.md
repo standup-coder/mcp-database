@@ -2,10 +2,10 @@
 
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Servers](https://img.shields.io/badge/MCP%20Servers-26-orange.svg)](#mcp-服务器一览)
+[![Servers](https://img.shields.io/badge/MCP%20Servers-37-orange.svg)](#mcp-服务器一览)
 [![Build](https://img.shields.io/github/actions/workflow/status/standup-coder/mcp4coder/ci.yml?branch=main)](https://github.com/standup-coder/mcp4coder/actions)
 
-**26 个 MCP Server，一套统一框架。** 覆盖开发工具链、文档查询、浏览器自动化、设计协作、项目管理、错误监控、代码沙箱等场景，配套 Web 管理界面和可视化工作流设计器。
+**37 个 MCP Server，一套统一框架。** 覆盖开发工具链、云平台管理、文档查询、浏览器自动化、设计协作、项目管理、错误监控、代码沙箱、支付通信等场景，配套 Web 管理界面和可视化工作流设计器。
 
 ---
 
@@ -21,6 +21,8 @@
 - [项目结构](#项目结构)
 - [开发新 Server](#开发新-server)
 - [Dumb 模式（极简版）](#dumb-模式极简版)
+- [2026 MCP 生态趋势](#2026-mcp-生态趋势)
+- [Roadmap](#roadmap)
 - [文档](#文档)
 - [贡献](#贡献)
 
@@ -94,7 +96,43 @@
 | 🌤️ **天气** | 实时天气、多日预报 | 3 | — |
 | 📅 **日历** | 日程管理、提醒 | 3 | — |
 
-> **合计：26 个 Server，139+ Tools**
+> **合计：37 个 Server，200+ Tools**
+
+### 云平台与基础设施
+
+| Server | 说明 | Tools | 所需环境变量 |
+|--------|------|:-----:|-------------|
+| ☁️ **Cloudflare** | Workers 部署、D1 数据库、KV 存储、R2 对象存储、DNS 管理 | 10 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` |
+| 🔺 **Vercel** | 项目部署、域名管理、环境变量、部署日志 | 8 | `VERCEL_TOKEN` |
+| 🟢 **Supabase** | PostgreSQL 数据库、Auth 用户管理、Storage、Edge Functions | 9 | `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` |
+| 🟠 **AWS** | S3 存储桶、Lambda 函数、EC2 实例、CloudWatch 日志 | 12 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION` |
+
+### 企业协作与项目管理
+
+| Server | 说明 | Tools | 所需环境变量 |
+|--------|------|:-----:|-------------|
+| 🎯 **Jira** | Issue 创建/更新、Sprint 管理、看板查询 | 8 | `JIRA_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN` |
+| 📘 **Confluence** | 页面创建/读取、空间搜索、内容更新 | 6 | `CONFLUENCE_URL`, `CONFLUENCE_EMAIL`, `CONFLUENCE_API_TOKEN` |
+
+### 支付与通信
+
+| Server | 说明 | Tools | 所需环境变量 |
+|--------|------|:-----:|-------------|
+| 💳 **Stripe** | 支付意图、客户管理、订阅、退款操作 | 9 | `STRIPE_SECRET_KEY` |
+| 📱 **Twilio** | SMS/MMS 发送、语音通话、WhatsApp 消息 | 6 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` |
+
+### 地图与可观测性
+
+| Server | 说明 | Tools | 所需环境变量 |
+|--------|------|:-----:|-------------|
+| 🗺️ **Google Maps** | 地点搜索、路线规划、地理编码、附近搜索 | 7 | `GOOGLE_MAPS_API_KEY` |
+| 📊 **Datadog** | 指标查询、日志搜索、告警管理、事件追踪 | 8 | `DATADOG_API_KEY`, `DATADOG_APP_KEY` |
+
+### API 与规范
+
+| Server | 说明 | Tools | 所需环境变量 |
+|--------|------|:-----:|-------------|
+| 📐 **OpenAPI** | OpenAPI/Swagger 规范解析、接口文档查询、Mock 数据生成 | 5 | — |
 
 ---
 
@@ -520,6 +558,108 @@ python commute_assistant.py
 ```
 
 详见 [`dumb_mode/README_DUMB.md`](dumb_mode/README_DUMB.md)。
+
+---
+
+## 2026 MCP 生态趋势
+
+### MCP 2025-11 规范更新：Streamable HTTP Transport
+
+2025 年 11 月，MCP 规范引入 **Streamable HTTP Transport**，正式取代原有的 SSE（Server-Sent Events）传输层：
+
+- **双向流式通信**：单个 HTTP 连接同时支持客户端流式输入和服务端流式输出
+- **更低延迟**：消除 SSE 需要独立 POST + GET 连接的开销
+- **更好的负载均衡**：标准 HTTP/2 多路复用，兼容云平台反向代理
+- **向后兼容**：支持降级到旧版 SSE 传输（协商机制）
+
+本项目计划在 v2.0 中迁移到 Streamable HTTP Transport，现有 SSE 端点保留至 v3.0。
+
+### MCP 授权：OAuth 2.1 原生支持
+
+MCP 规范新增 **Authorization 扩展**，定义了基于 OAuth 2.1 的标准授权流程：
+
+| 流程 | 说明 | 适用场景 |
+|------|------|---------|
+| Authorization Code + PKCE | 用户级授权，支持浏览器重定向 | GitHub、Notion、Linear 等需要用户登录的服务 |
+| Client Credentials | 机器对机器认证 | Cloudflare、AWS、Datadog 等服务账号 |
+| Token Introspection | 令牌验证端点 | MCP Server 验证客户端提供的 Token |
+
+本框架已在 `app/middleware/auth.py` 中实现 OAuth 2.1 Bearer Token 验证，并预留 Authorization Server Metadata 发现端点（`/.well-known/oauth-authorization-server`）。
+
+### 远程 MCP Server 趋势
+
+2025-2026 年，MCP Server 的部署形态正从"本地进程"向"云托管 API"演进：
+
+| 部署形态 | 优势 | 代表产品 |
+|---------|------|---------|
+| **本地进程**（stdio） | 低延迟、离线可用、数据不出本地 | 高德地图、文件系统、Git |
+| **远程 HTTP Server** | 无需本地安装、多用户共享、托管运维 | Cloudflare MCP、Stripe MCP、Linear MCP |
+| **云端 SaaS MCP** | 官方维护、自动更新、企业级 SLA | Notion MCP Cloud、GitHub MCP Cloud |
+
+本项目基于 FastAPI 实现 HTTP Server 模式，所有 MCP Server 均可通过统一 REST API 调用，天然支持远程部署场景。
+
+### MCP 生态注册表
+
+MCP Server 生态正在快速扩张，主要注册/发现平台：
+
+| 平台 | 地址 | 特色 |
+|------|------|------|
+| **mcp.so** | https://mcp.so | 最大 MCP Server 目录，社区驱动 |
+| **Glama AI** | https://glama.ai/mcp/servers | 带质量评分和安全审计 |
+| **Smithery.ai** | https://smithery.ai | 专注企业级 MCP Server 托管 |
+| **Anthropic 官方列表** | https://github.com/modelcontextprotocol/servers | 官方维护参考实现 |
+
+截至 2026 年 Q2，上述平台合计收录 3000+ 个 MCP Server，覆盖几乎所有主流 SaaS 产品。
+
+---
+
+## Roadmap
+
+### v2.0（计划 2026 Q3）
+
+**传输层升级**
+- [ ] 迁移到 Streamable HTTP Transport（MCP 2025-11 规范）
+- [ ] 保留 SSE 向后兼容层
+- [ ] WebSocket 传输支持（实时推送场景）
+
+**新增 Server**
+- [ ] **Cloudflare MCP Server** — Workers/D1/KV/R2/DNS 全功能管理
+- [ ] **Vercel MCP Server** — 部署、域名、环境变量、日志
+- [ ] **Supabase MCP Server** — PostgreSQL + Auth + Storage + Edge Functions
+- [ ] **AWS MCP Server** — S3/Lambda/EC2/CloudWatch
+- [ ] **Stripe MCP Server** — 支付、订阅、客户管理
+- [ ] **Twilio MCP Server** — SMS/Voice/WhatsApp
+
+**企业功能**
+- [ ] Jira MCP Server（Issue/Sprint/Board）
+- [ ] Confluence MCP Server（页面/空间管理）
+- [ ] Datadog MCP Server（指标/日志/告警）
+- [ ] Google Maps MCP Server（地点/路线/地理编码）
+- [ ] OpenAPI MCP Server（Swagger 规范解析与 Mock）
+
+### v2.1（计划 2026 Q4）
+
+**可观测性**
+- [ ] OpenTelemetry 链路追踪集成
+- [ ] 每个 Tool 调用的 Span 上报
+- [ ] 成本追踪（Token + API 调用费用）
+
+**安全增强**
+- [ ] OAuth 2.1 Authorization Server 发现端点
+- [ ] Tool 粒度权限控制（RBAC）
+- [ ] 审计日志（谁在何时调用了哪个 Tool）
+
+**开发体验**
+- [ ] MCP Server 热重载（开发模式）
+- [ ] Tool 调用 Playground（浏览器内交互测试）
+- [ ] 自动生成 TypeScript SDK（基于 OpenAPI 规范）
+
+### v3.0（计划 2027 Q1）
+
+- [ ] 多模态 Tool（图片/音频输入输出）
+- [ ] 分布式 MCP Server 集群（水平扩展）
+- [ ] MCP Server Marketplace（内置注册表集成）
+- [ ] Agent 编排原语（基于 MCP Sampling 扩展）
 
 ---
 
