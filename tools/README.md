@@ -146,6 +146,29 @@ tools/
 
 ---
 
+## 👥 按角色使用（USE-CASES/）
+
+按"角色 / 工作流"维度再切一次，看某个角色需要哪些 MCP：
+
+| 角色 | 适用 MCP 数 | 重点 MCP | 文档 |
+|------|:--------:|----------|------|
+| **FDE**（前沿部署工程师） | 24 / 26 | Database / HTTP Client / Filesystem / Desktop Cmd / Context7 / Sequential / Memory | [USE-CASES/FDE.md](./USE-CASES/FDE.md) |
+| **PM**（产品经理） | 18 / 26 | Notion / Linear / Figma / Brave Search / Docfork | [USE-CASES/PM.md](./USE-CASES/PM.md) |
+| **SRE / DevOps** | 20 / 26 | Sentry / Desktop Commander / Database / GitHub / 钉钉 | [USE-CASES/SRE.md](./USE-CASES/SRE.md) |
+| **Data Engineer** | 18 / 26 | Database / E2B / Google Sheets / Memory / HTTP Client | [USE-CASES/Data-Engineer.md](./USE-CASES/Data-Engineer.md) |
+| **Tech Lead** | 25 / 26 | GitHub / Linear / Notion / Memory / Context7 | [USE-CASES/Tech-Lead.md](./USE-CASES/Tech-Lead.md) |
+| **QA / 测试** | 18 / 26 | Browser / E2B / Sentry / Sequential / Linear | [USE-CASES/QA.md](./USE-CASES/QA.md) |
+| **Designer**（设计师） | 12 / 26 | Figma / ReactBits / Brave Search / Notion / Docfork | [USE-CASES/Designer.md](./USE-CASES/Designer.md) |
+| **Tech Writer**（文档工程师） | 15 / 26 | Notion / Docfork / DeepWiki / Brave Search / Context7 | [USE-CASES/Tech-Writer.md](./USE-CASES/Tech-Writer.md) |
+
+> **共同点**：8 个角色都用 Notion 做"人类可读的交付物"，多数用 Memory 沉淀知识。
+>
+> **完全用不到的只有"天气"** — 8 个角色都把它列入不推荐。
+>
+> **专门用得少的"工具专一型"角色**：Designer（12 个用得上，14 个用不到）。
+
+---
+
 ## 🚀 快速上手
 
 ### 一次性配置所有 MCP
